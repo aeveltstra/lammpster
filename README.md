@@ -109,8 +109,9 @@ everything so that the owner can work the software at need.
   
 
 Additional options:  
-- --list-column-names will list the column names of the specified page in the spread sheet. This is used to configure the mapping of the spread sheet columns to the posters. It looks at the [sheet] section in the lammpster.ini file to determine which row contains the sheet column names. Use it without providing other switches or options, like so: $ python3 ./lammpster.py --list-column-names  
-- --list-sheet-pages will list the page names in the spread sheet. Use this to explore a spread sheet of which the owner forgot to specify which page to query. By default, the page of interest is named sheet1, but owners have the option of renaming sheets. Use it without providing other switches or options, like so: $ python3 ./lammpster.py --list-sheet-pages  
+- --list-column-names will list the column names of the specified page in the spread sheet. This is used to configure the mapping of the spread sheet columns to the posters. It looks at the [sheet] section in the lammpster.ini file to determine which row contains the sheet column names. Invoke this without providing other switches or options, like so: $ python3 ./lammpster.py --list-column-names  
+- --list-sheet-pages will list the page names in the spread sheet. Use this to explore a spread sheet of which the owner forgot to specify which page to query. By default, the page of interest is named sheet1, but owners have the option of renaming sheets. Invoke this without providing other switches or options, like so: $ python3 ./lammpster.py --list-sheet-pages  
+- --list-column-values x will list all values in column x in the specified page in the spread sheet. Use this to find a record identifiers, for instance. Provide the index of the column to list. Usually that is column 1. Invoke this without providing other switches or options, like so: $ python3 ./lammpster.py --list-column-values 1
   
 For added support and feedback, contact OmegaJunior Consultancy 
 at: omegajunior@protonmail.com. 

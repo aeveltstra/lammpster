@@ -38,6 +38,7 @@ def get_cell_value_for_header(page, row_index, header):
 def get_current_year():
   return datetime.date.today().year
 
+
 def get_sheet(kees_file, sheet_id):
   if not keys_file:
     print('Please set file name for service account in lammpster.ini.')
@@ -54,9 +55,7 @@ def get_sheet(kees_file, sheet_id):
 
 def get_page_names(sheet):
   pages = sheet.worksheets()
-  titles = []
-  for page in pages:
-    titles.append(page.title)
+  titles = [page.title for page in pages]
   return titles
 
 
@@ -68,6 +67,17 @@ def get_page_column_names(page, row_index):
   if not page: 
     return None
   cells = page.row_values(row_index)
+  if not cells:
+    return None
+  return cells
+
+
+def get_column_values(page, column_index):
+  if not page:
+    return None
+  if 0 == column_index:
+    return None
+  cells = page.col_values(column_index)
   if not cells:
     return None
   return cells
@@ -131,12 +141,18 @@ def must_list_sheet_column_names():
 
 
 def must_list_sheet_page_names():
-  if len(sys.argv) == 0:
-    return False
-  for arg in sys.argv:
-    if arg == "--list-sheet-pages":
-      return True
-  return False
+  return "--list-sheet-pages" in sys.argv
+
+
+def must_list_column_values():
+  return "--list-column-values" in sys.argv
+
+
+def list_values_for_which_column():
+  i = sys.argv.index("--list-column-values")
+  if (i+1) < len(sys.argv):
+    return int(sys.argv[i+1])
+  return None
 
 
 def apply_profile_to_template(profile, template_contents):
@@ -153,14 +169,13 @@ def apply_profile_to_template(profile, template_contents):
   )
 
 
-def create_poster(profile, channel, output_folder, file_prefix):
-  if not profile or not channel or not output_folder:
+def create_poster(profile, channel, template_path, output_folder, file_prefix):
+  if not profile or not channel or not template_path or not output_folder:
     return None
   prefix = output_folder + file_prefix
     
-  template_setting = config.get('posters', channel)
   try: 
-    with open(template_setting, 'r') as template: 
+    with open(template_path, 'r') as template: 
       svg_poster = apply_profile_to_template(profile, template.read())
       if not svg_poster:
         print('Failed to create poster for channel ' + channel)
@@ -171,7 +186,7 @@ def create_poster(profile, channel, output_folder, file_prefix):
       svg2pdf(bytestring=svg_poster, write_to=prefix + profile.get('Case ID') + '-poster-' + channel + '.pdf')
 
   except FileNotFoundError:
-    print('For channel ' + channel + ' no template was found named ' + template_setting)
+    print('For channel ' + channel + ' no template was found named ' + template_path)
     return None
 
 
@@ -205,6 +220,16 @@ if must_list_sheet_column_names():
   columns = get_page_column_names(page, page_column_names_row);
   sys.exit(columns)
 
+if must_list_column_values():
+  column_index = list_values_for_which_column()
+  if not column_index:
+    sys.exit('Specify the column index of which to list the values. First column has index 1.')
+  elif 1 > column_index:
+    sys.exit('Column index must be larger than 0. First column has index 1.')
+  print('All column values in column ' + str(column_index) + ' of page:')
+  cells = get_column_values(page, column_index);
+  sys.exit(cells)
+
 
 row_id = read_row_id_from_command_line()
 if not row_id:
@@ -219,14 +244,15 @@ else:
     if not found_row:
       sys.exit('No row found with ID ' + row_id)
 
-    profile = create_profile(page, found_row)
     print('Found row with ID ' + row_id + '. Creating profile.')
+    profile = create_profile(page, found_row)
 
     output_folder = config.get('output', 'folder')
     output_file_prefix = config.get('output', 'file_prefix')
-    channels = ['facebook', 'twitter_header', 'twitter_post', 'discord', 'print']
-    for channel in channels:
-      print('Creating poster for channel ' + channel)
-      create_poster(profile, channel, output_folder, output_file_prefix)
+    poster_choices = dict(config.items('posters'))
+
+    print('Profile created. Generating and saving posters.')
+    for channel, template in poster_choices.items():
+      create_poster(profile, channel, template, output_folder, output_file_prefix)
 
     print('Done. Check the folder for new posters.')
