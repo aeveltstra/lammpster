@@ -37,19 +37,19 @@ the application:
 - libcairo-2
 
 To install libcairo-2 on an older Mac, read this document:
-https://cairographics.org/download/
-
+https://cairographics.org/download/  
+  
 In our test environment we used the fink package manager
-for MacOsX:
+for MacOsX:  
 https://www.finkproject.org/download/index.php?phpLang=en
-
+  
 and then we installed cairosvg with pipenv. Running Lammpster
 however failed because cairoffi was unable to locate the 
 libcairo libraries we had installed. That's because cairo
 does not look for libraries that exist in Fink's libraries
 path. So we have to tell it. For instance, if you used Fink,
 libcairo.2.dylib will exist in /sw/lib. To tell cairoffi to 
-look there, we can do this:
+look there, we can do this:  
 $ export LD_LIBRARY_PATH=/sw/lib:$LD_LIBRARY_PATH
 
 To build this application you need to have python3 installed,
@@ -59,17 +59,17 @@ app. Clone the source files from the git source at Source
 Hut. Have pipenv install the dependencies. Then run the 
 pipenv shell. Once inside the pipenv shell, use the following
 command to run the application: 
-
-$ python3 lammpster.py 12345
-
+  
+$ python3 lammpster.py 12345  
+  
 in which you replace the number 12345 with the identifier of
-the record in your LAMMP database.
-
+the record in your LAMMP database.  
+  
 It is likely to fail because the configuration available in
 the source files is customized to my specific environment. 
 You probably need to adjust it to fit your needs. That file 
-is called lammpster.ini.
-
+is called lammpster.ini.  
+  
 First and foremost, understand that this software expects that 
 the database is a Google Spread Sheet. The owner of that sheet
 must give its identifier to the Lammpster operator, to be set 
@@ -106,6 +106,11 @@ must inform the operator, who can adjust the software.
 In cases where the operator and the owner are the same person, 
 it is possible to have a software developer set up and customize
 everything so that the owner can work the software at need. 
+  
+
+Additional options:  
+- --list-column-names will list the column names of the specified page in the spread sheet. This is used to configure the mapping of the spread sheet columns to the posters. It looks at the [sheet] section in the lammpster.ini file to determine which row contains the sheet column names. Use it without providing other switches or options, like so: $ python3 ./lammpster.py --list-column-names  
+- --list-sheet-pages will list the page names in the spread sheet. Use this to explore a spread sheet of which the owner forgot to specify which page to query. By default, the page of interest is named sheet1, but owners have the option of renaming sheets. Use it without providing other switches or options, like so: $ python3 ./lammpster.py --list-sheet-pages  
   
 For added support and feedback, contact OmegaJunior Consultancy 
 at: omegajunior@protonmail.com. 
