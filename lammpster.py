@@ -41,9 +41,9 @@ def get_current_year():
 
 def get_sheet(kees_file, sheet_id):
   if not keys_file:
-    print('Please set file name for service account in lammpster.ini.')
+    print('Please set file name for service account in config.')
   if not sheet_id:
-    print('Please set the identity of the sheet to read in lammpster.ini.')
+    print('Please set the identity of the sheet to read in config.')
   if not keys_file or not sheet_id:
     sys.exit('Aborting.')
   client = gspread.service_account(keys_file)
@@ -191,13 +191,13 @@ def create_poster(profile, channel, template_path, output_folder, file_prefix):
 
 
 config = ConfigParser()
-if not os.path.exists('./lammpster.ini'):
-  sys.exit('Expected configuration file lammpster.ini was not found. '
+if not os.path.exists('./config'):
+  sys.exit('Expected configuration file "config" was not found. '
     + 'Please consult the documentation.')
 else:
   print('Retrieving configuration...')
 
-config.read('./lammpster.ini')
+config.read('./config')
 sheet_id = config.get('sheet', 'google_drive_sheet_id') 
 page_name = config.get('sheet', 'page_name')
 keys_file = config.get('account', 'keys_file')
