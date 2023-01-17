@@ -19,13 +19,55 @@ import json
 from cairosvg import svg2png, svg2pdf
 
 
-def list_headers():
+def list_headers() -> [str]:
+  """
+  List the headers in the spread sheet / database.
+  List them in the same order as they appear. 
+  In case of a spread sheet, they appear as column headers
+  next to each other. In case of many a database table
+  layout, they appear as row headers underneath each other.
+  """
+
   # we need an empty 0 header. if we don't supply one, 
   # the spreadsheet won't find the 1st column.
-  return ['', 'Case ID', 'Created At', 'Created By', 'Last Modified At', 'Last Modified By', 'Case Status', 'Poster Generated At', 'Given Name', 'Chosen Name', 'Aliases', 'Birth Year', 'Birth Year Accuracy', 'Last Seen Date', 'Last Seen Date Accuracy', 'Last Seen Location', 'Last Seen Wearing', 'Last Seen Activity', 'Who to Contact If Found', 'Image Path']
+  return [  ''
+          , 'Case ID'
+          , 'Created At'
+          , 'Created By'
+          , 'Last Modified At'
+          , 'Last Modified By'
+          , 'Case Status'
+          , 'Poster Generated At'
+          , 'Given Name'
+          , 'Chosen Name'
+          , 'Aliases'
+          , 'Birth Year'
+          , 'Birth Year Accuracy'
+          , 'Last Seen Date'
+          , 'Last Seen Date Accuracy'
+          , 'Last Seen Location'
+          , 'Last Seen Wearing'
+          , 'Last Seen Activity'
+          , 'Who to Contact If Found'
+          , 'Image Path'
+          , 'Image Path 2'
+          , 'Disappearance Circumstances'
+          , 'Eyes'
+          , 'Hair'
+          , 'Height'
+          , 'Identifying Features'
+          , 'Other Notes'
+          , 'Pronouns'
+          , 'Race'
+          , 'Weight'
+         ]
 
 
-def get_cell_value_for_header(page, row_index, header):
+def get_cell_value_for_header(
+  page, 
+  row_index: int, 
+  header: str
+) -> str:
   header_index = list_headers().index(header)
   if not header_index:
      return None
@@ -35,11 +77,14 @@ def get_cell_value_for_header(page, row_index, header):
   return cell.value
 
 
-def get_current_year():
+def get_current_year() -> int:
   return datetime.date.today().year
 
 
-def get_sheet(kees_file, sheet_id):
+def get_sheet(
+  keys_file: str, 
+  sheet_id: str
+):
   if not keys_file:
     print('Please set file name for service account in config.')
   if not sheet_id:
@@ -53,17 +98,23 @@ def get_sheet(kees_file, sheet_id):
   return sheet
 
 
-def get_page_names(sheet):
+def get_page_names(sheet) -> [str]:
   pages = sheet.worksheets()
   titles = [page.title for page in pages]
   return titles
 
 
-def get_page(sheet, page_name):
+def get_page(
+  sheet, 
+  page_name: str
+):
   return sheet.worksheet(page_name)
 
 
-def get_page_column_names(page, row_index):
+def get_page_column_names(
+  page, 
+  row_index: int
+) -> [str]:
   if not page: 
     return None
   cells = page.row_values(row_index)
@@ -72,7 +123,10 @@ def get_page_column_names(page, row_index):
   return cells
 
 
-def get_column_values(page, column_index):
+def get_column_values(
+  page, 
+  column_index: int
+) -> [str]:
   if not page:
     return None
   if 0 == column_index:
@@ -83,7 +137,10 @@ def get_column_values(page, column_index):
   return cells
 
     
-def create_profile(page, row_index):
+def create_profile(
+  page, 
+  row_index: int
+) -> dict:
   if not page or not row_index:
     return None
   g1 = partial(get_cell_value_for_header, page)
@@ -93,15 +150,25 @@ def create_profile(page, row_index):
   if birth_year:
     age = get_current_year() - int(birth_year)
   return {
+    'Age': age,
+    'Birth Year': birth_year,
     'Case ID': g2('Case ID'),
     'Chosen Name': g2('Chosen Name'),
-    'Birth Year': birth_year,
-    'Age': age,
+    'Disappearance Circumstances': g2('Disappearance Circumstances'),
+    'Eyes': g2('Eyes'),
+    'Hair': g2('Hair'),
+    'Height': g2('Height'),
+    'Identifying Features': g2('Identifying Features'),
+    'Image 1 Path': g2('Image Path'),
+    'Image 2 Path': g2('Image Path 2'),
+    'Last Seen Date': g2('Last Seen Date'),
     'Last Seen Location': g2('Last Seen Location'),
     'Last Seen Wearing': g2('Last Seen Wearing'),
-    'Last Seen Date': g2('Last Seen Date'),
-    'Who to Contact If Found': g2('Who to Contact If Found'),
-    'Image Path': g2('Image Path')
+    'Other Notes': g2('Other Notes'),
+    'Pronouns': g2('Pronouns'),
+    'Race': g2('Race'),
+    'Weight': g2('Weight'),
+    'Who to Contact If Found': g2('Who to Contact If Found')
   }
 
 
@@ -165,7 +232,7 @@ def apply_profile_to_template(profile, template_contents):
     ,last_seen_where=profile.get('Last Seen Location', 'unknown')
     ,last_seen_wearing=profile.get('Last Seen Wearing', 'unknown')
     ,contact_if_found=profile.get('Who to Contact If Found', 'unknown')
-    ,image_path=profile.get('Image Path', '')
+    ,image_path=profile.get('Image 1 Path', '')
   )
 
 
@@ -191,8 +258,8 @@ def create_poster(profile, channel, template_path, output_folder, file_prefix):
 
 
 config = ConfigParser()
-if not os.path.exists('./config'):
-  sys.exit('Expected configuration file "config" was not found. '
+if not os.path.exists('./.config'):
+  sys.exit('Expected configuration file ".config" was not found. '
     + 'Please consult the documentation.')
 else:
   print('Retrieving configuration...')
