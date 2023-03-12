@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module lammpster</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>lammpster</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/admin/Documents/dev/zjr/lammpster/lammpster.py">/Users/admin/Documents/dev/zjr/lammpster/lammpster.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;Easily&nbsp;publish&nbsp;LAMMP&nbsp;registrations&nbsp;as&nbsp;posters&nbsp;for&nbsp;publication&nbsp;<br>
+#&nbsp;on&nbsp;social&nbsp;media&nbsp;and&nbsp;phystical&nbsp;printing.&nbsp;<br>
+#<br>
+#&nbsp;Copyright&nbsp;OmegaJunior&nbsp;Consultancy<br>
+#&nbsp;Since&nbsp;2021-10-11<br>
+#&nbsp;Version&nbsp;2.23.1018.2130<br>
+#</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="datetime.html">datetime</a><br>
+<a href="gspread.html">gspread</a><br>
+</td><td width="25%" valign=top><a href="json.html">json</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-apply_profile_to_template"><strong>apply_profile_to_template</strong></a>(profile, template_contents)</dt></dl>
+ <dl><dt><a name="-create_poster"><strong>create_poster</strong></a>(profile, channel, template_path, output_folder, file_prefix) -&gt; None</dt></dl>
+ <dl><dt><a name="-create_profile"><strong>create_profile</strong></a>(page, row_index: int) -&gt; Optional[dict[str, Any]]</dt></dl>
+ <dl><dt><a name="-find_first"><strong>find_first</strong></a>(predicate, haystack)</dt></dl>
+ <dl><dt><a name="-find_row_index"><strong>find_row_index</strong></a>(page, row_identifier)</dt></dl>
+ <dl><dt><a name="-get_cell_value_for_header"><strong>get_cell_value_for_header</strong></a>(page, row_index: int, header: str) -&gt; Optional[str]</dt><dd><tt>Retrieve&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;cell&nbsp;specified&nbsp;by&nbsp;row_index<br>
+for&nbsp;the&nbsp;column&nbsp;specified&nbsp;by&nbsp;header.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+page:&nbsp;Google&nbsp;Sheets&nbsp;Page,&nbsp;required<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;Google&nbsp;Sheets&nbsp;Page&nbsp;to&nbsp;look&nbsp;in.<br>
+row_index:&nbsp;int,&nbsp;required<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;row&nbsp;in&nbsp;which&nbsp;to&nbsp;look.<br>
+header:&nbsp;str,&nbsp;required<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;caption&nbsp;of&nbsp;the&nbsp;column&nbsp;in&nbsp;which&nbsp;to&nbsp;look.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str&nbsp;|&nbsp;None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;if&nbsp;the&nbsp;cell&nbsp;was&nbsp;not&nbsp;found.&nbsp;Otherwise&nbsp;its<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents&nbsp;as&nbsp;a&nbsp;string.&nbsp;We&nbsp;are&nbsp;not&nbsp;going&nbsp;to&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pretend&nbsp;that&nbsp;sheet&nbsp;data&nbsp;types&nbsp;exist.</tt></dd></dl>
+ <dl><dt><a name="-get_column_values"><strong>get_column_values</strong></a>(page, column_index: int) -&gt; Optional[List[str]]</dt></dl>
+ <dl><dt><a name="-get_current_year"><strong>get_current_year</strong></a>() -&gt; int</dt><dd><tt>Retrieves&nbsp;the&nbsp;year&nbsp;number&nbsp;of&nbsp;today's&nbsp;date,<br>
+whatever&nbsp;that&nbsp;is&nbsp;at&nbsp;the&nbsp;moment&nbsp;of&nbsp;execution.</tt></dd></dl>
+ <dl><dt><a name="-get_page"><strong>get_page</strong></a>(sheet, page_name: str)</dt></dl>
+ <dl><dt><a name="-get_page_column_names"><strong>get_page_column_names</strong></a>(page, row_index: int) -&gt; Optional[List[str]]</dt></dl>
+ <dl><dt><a name="-get_page_names"><strong>get_page_names</strong></a>(sheet) -&gt; List[str]</dt></dl>
+ <dl><dt><a name="-get_sheet"><strong>get_sheet</strong></a>(keys_file: str, sheet_id: str)</dt><dd><tt>Finds&nbsp;and&nbsp;returns&nbsp;a&nbsp;Google&nbsp;Sheet&nbsp;based&nbsp;on&nbsp;its&nbsp;ID&nbsp;and&nbsp;<br>
+the&nbsp;credentials&nbsp;to&nbsp;access&nbsp;it,&nbsp;as&nbsp;specified&nbsp;in&nbsp;keys_file.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+keys_file:&nbsp;str,&nbsp;required<br>
+&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;path&nbsp;that&nbsp;specifies&nbsp;in&nbsp;which&nbsp;file&nbsp;the&nbsp;keys&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stored,&nbsp;that&nbsp;give&nbsp;access&nbsp;to&nbsp;the&nbsp;Google&nbsp;Sheet&nbsp;that&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;specified&nbsp;in&nbsp;sheet_id.&nbsp;Check&nbsp;the&nbsp;gspread&nbsp;docs&nbsp;to&nbsp;see<br>
+&nbsp;&nbsp;&nbsp;&nbsp;what&nbsp;format&nbsp;it&nbsp;must&nbsp;have&nbsp;and&nbsp;how&nbsp;to&nbsp;obtain&nbsp;them.<br>
+sheet_id:&nbsp;str,&nbsp;required<br>
+&nbsp;&nbsp;&nbsp;&nbsp;An&nbsp;identity&nbsp;for&nbsp;the&nbsp;Google&nbsp;Sheet&nbsp;as&nbsp;provided&nbsp;by&nbsp;Google.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;you&nbsp;open&nbsp;the&nbsp;sheet&nbsp;in&nbsp;your&nbsp;web&nbsp;browser,&nbsp;its&nbsp;ID&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;shown&nbsp;as&nbsp;the&nbsp;weird&nbsp;code&nbsp;with&nbsp;numbers&nbsp;and&nbsp;letters&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;address&nbsp;bar.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+sheet&nbsp;|&nbsp;None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None,&nbsp;if&nbsp;the&nbsp;gspread&nbsp;module&nbsp;was&nbsp;unable&nbsp;to&nbsp;retrieve&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;service&nbsp;account&nbsp;based&nbsp;on&nbsp;the&nbsp;provided&nbsp;keys&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None,&nbsp;if&nbsp;the&nbsp;passed-in&nbsp;sheet_id&nbsp;does&nbsp;not&nbsp;lead&nbsp;to&nbsp;an&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;existing&nbsp;or&nbsp;accessible&nbsp;Google&nbsp;Sheet.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Otherwise,&nbsp;the&nbsp;Google&nbsp;Sheet.</tt></dd></dl>
+ <dl><dt><a name="-is_first_column"><strong>is_first_column</strong></a>(cell)</dt></dl>
+ <dl><dt><a name="-list_headers"><strong>list_headers</strong></a>() -&gt; List[str]</dt><dd><tt>List&nbsp;the&nbsp;headers&nbsp;in&nbsp;the&nbsp;spread&nbsp;sheet&nbsp;/&nbsp;database.<br>
+List&nbsp;them&nbsp;in&nbsp;the&nbsp;same&nbsp;order&nbsp;as&nbsp;they&nbsp;appear.&nbsp;<br>
+In&nbsp;case&nbsp;of&nbsp;a&nbsp;spread&nbsp;sheet,&nbsp;they&nbsp;appear&nbsp;as&nbsp;column&nbsp;headers<br>
+next&nbsp;to&nbsp;each&nbsp;other.&nbsp;In&nbsp;case&nbsp;of&nbsp;many&nbsp;a&nbsp;database&nbsp;table<br>
+layout,&nbsp;they&nbsp;appear&nbsp;as&nbsp;row&nbsp;headers&nbsp;underneath&nbsp;each&nbsp;other.</tt></dd></dl>
+ <dl><dt><a name="-list_values_for_which_column"><strong>list_values_for_which_column</strong></a>()</dt></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>() -&gt; None</dt></dl>
+ <dl><dt><a name="-must_list_column_values"><strong>must_list_column_values</strong></a>()</dt></dl>
+ <dl><dt><a name="-must_list_sheet_column_names"><strong>must_list_sheet_column_names</strong></a>()</dt></dl>
+ <dl><dt><a name="-must_list_sheet_page_names"><strong>must_list_sheet_page_names</strong></a>()</dt></dl>
+ <dl><dt><a name="-read_row_id_from_command_line"><strong>read_row_id_from_command_line</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>Any</strong> = typing.Any<br>
+<strong>List</strong> = typing.List<br>
+<strong>Union</strong> = typing.Union</td></tr></table>
+</body></html>
