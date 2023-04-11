@@ -5,12 +5,8 @@ name = "pypi"
 
 [packages]
 oauth2client = "*"
-gspread = "*"
 cairosvg = "*"
-pycairo = "~=1.12.0"
-black = "*"
-mypy = "*"
-pycodestyle = "*"
+gspread = "*"
 
 [dev-packages]
 
