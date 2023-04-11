@@ -68,7 +68,11 @@ def list_headers() -> List[str]:
     ]
 
 
-def get_cell_value_for_header(page, row_index: int, header: str) -> Union[str, None]:
+def get_cell_value_for_header(
+    page,
+    row_index: int,
+    header: str
+) -> Union[str, None]:
     """
     Retrieve the value of the cell specified by row_index
     for the column specified by header.
@@ -127,25 +131,33 @@ def get_sheet(keys_file: str, sheet_id: str):
 
     Returns
     -------
-    sheet | None
-        None, if the gspread module was unable to retrieve a
-        service account based on the provided keys file.
-        None, if the passed-in sheet_id does not lead to an
+    sheet | KeyError
+        KeyError, if the gspread module was unable to retrieve a
+        service account based on the provided keys file
+        or if the passed-in sheet_id does not lead to an
         existing or accessible Google Sheet.
         Otherwise, the Google Sheet.
     """
 
     if not keys_file:
-        print("Please set file name for service account in config.")
+        return KeyError(
+            "Please set file name for service account in config."
+        )
     if not sheet_id:
-        print("Please set the identity of the sheet to read in config.")
-    if not keys_file or not sheet_id:
-        sys.exit("Aborting.")
+        return KeyError(
+            "Please set the identity of the sheet to read in config."
+        )
     client = gspread.service_account(keys_file)
     if not client:
-        return None
-    sheet = client.open_by_key(sheet_id)
-    return sheet
+        return KeyError(
+            "Failed to create a client to talk to Google Sheets."
+        )
+    maybe_sheet = client.open_by_key(sheet_id)
+    if not maybe_sheet:
+        return KeyError(
+            "Failed to open the requested Google Sheet."
+        )
+    return maybe_sheet
 
 
 def get_page_names(sheet) -> List[str]:
@@ -238,7 +250,7 @@ def get_column_values(page, column_index: int) -> Union[List[str], None]:
 
 
 def create_profile(
-    page, 
+    page,
     case_row_index: int
 ) -> Union[dict[str, Any], None]:
     """
@@ -259,7 +271,9 @@ def create_profile(
         "Birth Year": birth_year,
         "Case ID": get_cell_value("Case ID"),
         "Chosen Name": get_cell_value("Chosen Name"),
-        "Disappearance Circumstances": get_cell_value("Disappearance Circumstances"),
+        "Disappearance Circumstances": get_cell_value(
+            "Disappearance Circumstances"
+        ),
         "Eyes": get_cell_value("Eyes"),
         "Hair": get_cell_value("Hair"),
         "Height": get_cell_value("Height"),
@@ -435,7 +449,10 @@ def apply_profile_to_template(profile, template_contents) -> str:
             last_seen_where=profile.get("Last Seen Location", ""),
             last_seen_wearing=profile.get("Last Seen Wearing", ""),
             identifying_features=profile.get("Identifying Features", ""),
-            disappearance_circumstances=profile.get("Disappearance Circumstances", ""),
+            disappearance_circumstances=profile.get(
+                "Disappearance Circumstances",
+                ""
+            ),
             contact_if_found=profile.get("Who to Contact If Found", ""),
             image_path_1=profile.get(
                 "Image Path", "templates/transparent-1020x1024.png"
@@ -503,9 +520,16 @@ def create_poster(
     svg_poster = None
     try:
         with open(template_path, "r", encoding="utf-8") as template:
-            svg_poster = apply_profile_to_template(profile, template.read())
+            svg_poster = apply_profile_to_template(
+                             profile,
+                             template.read()
+                         )
     except FileNotFoundError:
-        print(f"For channel {channel} no template was found named {template_path}.")
+        msg = (
+            f"For channel {channel} no template was found "
+            f"named {template_path}."
+        )
+        print(msg)
         return None
 
     if not svg_poster:
@@ -568,14 +592,18 @@ def maybe_get_config_section_items(
 
     except (KeyError, NoOptionError):
         if default:
-            print(
-                f"Info: found no configuration section {section_name}. Defaulting to {default}."
+            msg = (
+                f"Info: found no configuration section {section_name}."
+                f" Defaulting to {default}."
             )
+            print(msg)
             result = default
         else:
-            print(
-                f"Warning: found no configuration section {section_name}. No default was provided."
+            msg = (
+                f"Warning: found no configuration section {section_name}."
+                " No default was provided."
             )
+            print(msg)
             result = None
 
     return result
@@ -617,6 +645,123 @@ def maybe_get_config_entry(
     return result
 
 
+def get_sheet_page(config, sheet):
+    """
+    Attempts to retrieve the page within the sheet, that is identified
+    by the configuration file.
+
+    Parameters
+    ----------
+    - config: ConfigParser, required. The configuration file parser,
+      with the configuration file already loaded.
+
+    Returns
+    -------
+    Either a KeyError, or a Google Sheet page.
+    """
+
+    page_name = maybe_get_config_entry(config, "sheet", "page_name")
+    if not page_name:
+        msg = (
+            "Aborting. Missing configuration key: "
+            "'page_name'. "
+            "Read the manual about setting up the configuration file."
+        )
+        return KeyError(msg)
+    maybe_page = get_page(sheet, page_name)
+    if not maybe_page:
+        msg = (
+            f"Spreadsheet has no page named {page_name}. "
+            "Read the manual about setting up the configuration file."
+        )
+        return KeyError(msg)
+    return maybe_page
+
+
+def get_configured_sheet(config):
+    """
+    Attempts to connect to the spreadsheet,
+    as configured by the configuration file.
+
+    Parameters
+    ----------
+    - config: ConfigParser, required. The configuration file parser,
+      with the configuration file already loaded.
+
+    Returns
+    -------
+    Either a KeyError, or a Google Sheet sheet.
+    """
+
+    sheet_id = maybe_get_config_entry(config, "sheet", "google_drive_sheet_id")
+    keys_file = maybe_get_config_entry(config, "account", "keys_file")
+    if not sheet_id or not keys_file:
+        msg = (
+            "Aborting. Missing 1 or more configuration keys: "
+            "'google_drive_sheet_id' or 'keys_file'. "
+            "Read the manual about setting up the configuration file."
+        )
+        return KeyError(msg)
+    maybe_sheet = get_sheet(keys_file, sheet_id)
+    if not maybe_sheet:
+        msg = (
+            "Aborting. No sheet found with identity {sheet_id}. "
+            "Read the manual about setting up the configuration file."
+        )
+        return KeyError(msg)
+    return maybe_sheet
+
+
+def run_on_demand_functions(
+    config,
+    sheet,
+    page
+):
+    """
+    Runs the functions that are requested by the command-line
+    arguments during the run invocation. See the readme file for
+    documentation of the command-line switches.
+    """
+
+    if must_list_sheet_page_names():
+        print("All page names in the spread sheet:")
+        print(get_page_names(sheet))
+        sys.exit()
+
+    if must_list_sheet_column_names():
+        print("All column names in page:")
+        page_column_names_row = maybe_get_config_entry(
+            config, "sheet", "page_column_names_row", "0"
+        )
+        columns = get_page_column_names(page, int(page_column_names_row))
+        print(columns)
+        sys.exit()
+
+    if must_list_column_values():
+        column_index = list_values_for_which_column()
+        if not column_index:
+            msg = (
+                "Specify the column index of which to list the "
+                "values. First column has index 1."
+            )
+            sys.exit(msg)
+        elif 1 > column_index:
+            msg = (
+                "Column index must be larger than 0. "
+                "First column has index 1."
+            )
+            sys.exit(msg)
+
+        msg = (
+            "All column values in column "
+            "{str(column_index)} of page:"
+        )
+        print(msg)
+        cells = get_column_values(page, column_index)
+        print(cells)
+        sys.exit()
+
+
 def main() -> None:
     """
     Main entry point of the program. Checks the environment, reads
@@ -639,56 +784,19 @@ def main() -> None:
 
     config = ConfigParser()
     config.read("./.config")
-    sheet_id = maybe_get_config_entry(config, "sheet", "google_drive_sheet_id")
-    page_name = maybe_get_config_entry(config, "sheet", "page_name")
-    keys_file = maybe_get_config_entry(config, "account", "keys_file")
-    if not sheet_id or not page_name or not keys_file:
-        msg = (
-            "Aborting. Missing 1 or more configuration keys: "
-            "'google_drive_sheet_id', 'page_name', or 'keys_file'. "
-            "Read the manual about setting up the configuration file."
-        )
-        sys.exit(msg)
+    maybe_sheet = get_configured_sheet(config)
+    if isinstance(maybe_sheet, KeyError):
+        sys.exit(maybe_sheet)
 
-    sheet = get_sheet(keys_file, sheet_id)
+    maybe_page = get_sheet_page(config, maybe_sheet)
+    if isinstance(maybe_page, KeyError):
+        sys.exit(maybe_page)
 
-    if must_list_sheet_page_names():
-        print("All page names in the spread sheet:")
-        pages = get_page_names(sheet)
-        print(pages)
-        sys.exit()
-
-    page = get_page(sheet, page_name)
-    if not page:
-        sys.exit(f"Spreadsheet has no page named {page_name}.")
-
-    print(f"Found spreadsheet page named {page_name}.")
-
-    if must_list_sheet_column_names():
-        print("All column names in page:")
-        page_column_names_row = maybe_get_config_entry(
-            config, "sheet", "page_column_names_row", "0"
-        )
-        columns = get_page_column_names(page, int(page_column_names_row))
-        print(columns)
-        sys.exit()
-
-    if must_list_column_values():
-        column_index = list_values_for_which_column()
-        if not column_index:
-            sys.exit(
-                "Specify the column index of which to list the values. First column has index 1."
-            )
-        elif 1 > column_index:
-            sys.exit("Column index must be larger than 0. First column has index 1.")
-        print("All column values in column " + str(column_index) + " of page:")
-        cells = get_column_values(page, column_index)
-        print(cells)
-        sys.exit()
+    run_on_demand_functions(config, maybe_sheet, maybe_page)
 
     case_id = read_case_id_from_command_line()
     if not case_id:
-        message = """Error: missing case identifier.
+        msg = """Error: missing case identifier.
   Specify the identity of the case/profile to print.
   Place it as the first argument of the application
   run invocation, like so:
@@ -698,13 +806,15 @@ def main() -> None:
   in which you substitute i for the column that
   holds the case identifiers, like so:
   $ python3 ./lammpster.py --list-column-values 1"""
-        sys.exit(message)
+        sys.exit(msg)
     else:
-        print(
-            f"Lammpster will create posters for the profile based on row {case_id}..."
+        msg = (
+            "Lammpster will create posters for the profile based "
+            f"on row {case_id}..."
         )
+        print(msg)
 
-        case_row_index = find_row_index(page, case_id)
+        case_row_index = find_row_index(maybe_page, case_id)
         if not case_row_index:
             msg = (
                 f"Error: No case found with id {case_id}. Use the "
@@ -714,19 +824,41 @@ def main() -> None:
             sys.exit(msg)
 
         print(f"Found case with id {case_id}. Creating profile...")
-        profile = create_profile(page, case_row_index)
+        profile = create_profile(maybe_page, case_row_index)
 
-        output_folder = maybe_get_config_entry(config, "output", "folder", "~/")
-        output_file_prefix = maybe_get_config_entry(config, "output", "file_prefix", "")
+        output_folder = maybe_get_config_entry(
+            config,
+            "output",
+            "folder",
+            "~/"
+        )
+        output_file_prefix = maybe_get_config_entry(
+            config,
+            "output",
+            "file_prefix",
+            ""
+        )
 
-        poster_choices = maybe_get_config_section_items(config, "posters", {})
+        poster_choices = maybe_get_config_section_items(
+             config,
+             "posters",
+             {}
+        )
         if not poster_choices:
-            raise Exception("Error: missing posters configuration. Check the manual.")
+            raise Exception(
+               "Error: missing posters configuration. Check the manual."
+            )
 
         print("Profile created.")
         print("Generating and saving posters....")
         for channel, template in poster_choices.items():
-            create_poster(profile, channel, template, output_folder, output_file_prefix)
+            create_poster(
+                profile,
+                channel,
+                template,
+                output_folder,
+                output_file_prefix
+            )
 
         print("Done. Check the folder for new posters.")
         sys.exit()
