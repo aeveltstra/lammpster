@@ -2,7 +2,7 @@ To create posters from data stored in the LAMMP database.
 
 Copyright: OmegaJunior Consultancy
 Since: 2021-10-11.
-Version: 2023-01-09
+Version: 2023-04-10
 
 The LAMMP database stores and publishes information about
 missing and murdered people who are part of marginalized 
@@ -36,11 +36,11 @@ the application:
 - pipenv,
 - libcairo-2
 
-To install libcairo-2 on an older Mac, read this document:
+To install libcairo-2, read this document:
 https://cairographics.org/download/  
   
 In our test environment we used the fink package manager
-for MacOsX:  
+for MacOsX El Capitan:  
 https://www.finkproject.org/download/index.php?phpLang=en
   
 and then we installed cairosvg with pipenv. Running Lammpster
