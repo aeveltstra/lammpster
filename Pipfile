@@ -5,8 +5,9 @@ name = "pypi"
 
 [packages]
 oauth2client = "*"
-cairosvg = "*"
 gspread = "*"
+selenium = "*"
+pillow = "*"
 
 [dev-packages]
 

@@ -5,22 +5,23 @@
 #
 # Copyright OmegaJunior Consultancy
 # Since 2021-10-11
-# Version 2.23.1018.2130
+# Version 2.23.411.2059
 #
 """
 
 import datetime
-# import json
 import os
 import sys
+from io import BytesIO
 from configparser import ConfigParser, NoOptionError
 from functools import partial
 from string import Template
 from typing import Any, List, Union, Optional
 from urllib.error import URLError
+from PIL import Image
 import gspread
-# from oauth2client.service_account import ServiceAccountCredentials
-from cairosvg import svg2png, svg2pdf
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 
 def list_headers() -> List[str]:
@@ -143,6 +144,13 @@ def get_sheet(keys_file: str, sheet_id: str):
         return KeyError(
             "Please set file name for service account in config."
         )
+    if not os.path.exists(keys_file):
+        msg = (
+            "The file name for service account set in the config file, "
+            "does not lead to any existing file. Please check. The "
+            f"setting points to: {keys_file}."
+        )
+        return KeyError(msg)
     if not sheet_id:
         return KeyError(
             "Please set the identity of the sheet to read in config."
@@ -377,7 +385,17 @@ def list_values_for_which_column():
 
     i = sys.argv.index("--list-column-values")
     if (i + 1) < len(sys.argv):
-        return int(sys.argv[i + 1])
+        try:
+            return int(sys.argv[i + 1])
+        except:
+            msg = (
+                "The value that should identify the column, "
+                "of which the values should get returned, "
+                "must be a whole number (integer), "
+                "larger than 0 (zero). Please correct the "
+                "invocation and try again."
+            )
+            sys.exit(msg)
     return None
 
 
@@ -473,6 +491,69 @@ def apply_profile_to_template(profile, template_contents) -> str:
         raise
 
 
+def get_webdriver():
+    """
+    Attempts to obtain a web driver based on any 
+    web browser installed on the system. 
+    """
+    try:
+        attempt = webdriver.Chrome()
+        if attempt:
+            return attempt
+    except:
+        attempt = None
+    if not attempt:
+        try:
+            attempt = webdriver.Safari()
+            if attempt:
+                return attempt
+        except:
+            attempt = None
+    if not attempt:
+        try:
+            attempt = webdriver.Firefox()
+            if attempt:
+                return attempt
+        except:
+            attempt = None
+    if not attempt:
+        try:
+            attempt = webdriver.Edge()
+            if attempt:
+                return attempt
+        except:
+            attempt = None
+    return None
+
+
+def transform_svg_2_pdf(in_svg_path, out_pdf_path):
+    """
+    Turns the input SVG file into a PDF file and writes it
+    to the output path.
+    """
+    with get_webdriver() as driver:
+        driver.get(f"file://{os.path.abspath(in_svg_path)}")
+        driver.implicitly_wait(5)
+        png = driver.find_element(By.TAG_NAME, "svg").screenshot_as_png
+        img = Image.open(BytesIO(png))
+        img.save(out_pdf_path, "PDF", quality=100)
+    return None
+
+
+def transform_svg_2_png(in_svg_path, out_png_path):
+    """
+    Turns the input SVG file into a PNG file and writes it
+    to the output path.
+    """
+    with get_webdriver() as driver:
+        driver.get(f"file://{os.path.abspath(in_svg_path)}")
+        driver.implicitly_wait(5)
+        png = driver.find_element(By.TAG_NAME, "svg").screenshot_as_png
+        img = Image.open(BytesIO(png))
+        img.save(out_png_path, "PNG", quality=100)
+    return None
+
+
 def create_poster(
     profile,
     channel,
@@ -536,27 +617,14 @@ def create_poster(
         print("Failed to create poster contents.")
         return None
 
-    file_path = f"{prefix}{case_id}-poster-{channel}.svg"
-    print(f"Saving SVG poster to {file_path}...")
-    with open(file_path, "w", encoding="utf-8") as output_file:
+    file_name_bare = f"{prefix}{case_id}-poster-{channel}"
+    file_name_svg = f"{file_name_bare}.svg"
+    print(f"Saving SVG poster to {file_name_svg}...")
+    with open(file_name_svg, "w", encoding="utf-8") as output_file:
         output_file.write(svg_poster)
         output_file.close()
-    file_path = f"{prefix}{case_id}-poster-{channel}.png"
-    print(f"Saving PNG poster to {file_path}...")
-    try:
-        svg2png(bytestring=svg_poster, write_to=file_path)
-    except URLError as err:
-        print(f"Error: file not found: {err}.")
-    except FileNotFoundError as err:
-        print(f"Error: file not found: {err}.")
-    file_path = f"{prefix}{case_id}-poster-{channel}.pdf"
-    print(f"Saving PDF poster to {file_path}...")
-    try:
-        svg2pdf(bytestring=svg_poster, write_to=file_path)
-    except URLError as err:
-        print(f"Error: file not found: {err}.")
-    except FileNotFoundError as err:
-        print(f"Error: file not found: {err}.")
+    transform_svg_2_png(file_name_svg, f"{file_name_bare}.png")
+    transform_svg_2_pdf(file_name_svg, f"{file_name_bare}.pdf")
     return None
 
 
@@ -754,7 +822,7 @@ def run_on_demand_functions(
 
         msg = (
             "All column values in column "
-            "{str(column_index)} of page:"
+            f"{str(column_index)} of page:"
         )
         print(msg)
         cells = get_column_values(page, column_index)
