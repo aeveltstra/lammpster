@@ -33,34 +33,17 @@ Dependencies you need to install before attempting to run
 the application: 
 - python3,
 - pip3,
-- pipenv,
-- libcairo-2
-
-To install libcairo-2, read this document:
-https://cairographics.org/download/  
-  
-In our test environment we used the fink package manager
-for MacOsX El Capitan:  
-https://www.finkproject.org/download/index.php?phpLang=en
-  
-and then we installed cairosvg with pipenv. Running Lammpster
-however failed because cairoffi was unable to locate the 
-libcairo libraries we had installed. That's because cairo
-does not look for libraries that exist in Fink's libraries
-path. So we have to tell it. For instance, if you used Fink,
-libcairo.2.dylib will exist in /sw/lib. To tell cairoffi to 
-look there, we can do this after starting the pipenv shell:  
-$ export LD_LIBRARY_PATH=/sw/lib:$LD_LIBRARY_PATH
+- pipenv
 
 To build this application you need to have python3 installed,
 with pip3 as its package manager, to install pipenv as the
 tool that creates a virtual environment in which to run the 
-app. Clone the source files from the git source at Source 
-Hut. Have pipenv install the dependencies. Then run the 
-pipenv shell. Once inside the pipenv shell, use the following
+app. Clone the source files from the git source at GitHub
+or Source Hut. Have pipenv install the dependencies. Then run 
+the pipenv shell. Once inside the pipenv shell, use this
 command to run the application: 
   
-$ python3 lammpster.py 12345  
+$ python3 -m lammpster 12345  
   
 in which you replace the number 12345 with the identifier of
 the record in your LAMMP database.  
@@ -109,10 +92,9 @@ everything so that the owner can work the software at need.
   
 
 Additional options:  
-- --list-column-names will list the column names of the specified page in the spread sheet. This is used to configure the mapping of the spread sheet columns to the posters. It looks at the [sheet] section in the config file to determine which row contains the sheet column names. Invoke this without providing other switches or options, like so: $ python3 ./lammpster.py --list-column-names  
-- --list-sheet-pages will list the page names in the spread sheet. Use this to explore a spread sheet of which the owner forgot to specify which page to query. By default, the page of interest is named sheet1, but owners have the option of renaming sheets. Invoke this without providing other switches or options, like so: $ python3 ./lammpster.py --list-sheet-pages  
-- --list-column-values x will list all values in column x in the specified page in the spread sheet. Use this to find a record identifiers, for instance. Provide the index of the column to list. Usually that is column 1. Invoke this without providing other switches or options, like so: $ python3 ./lammpster.py --list-column-values 1
-
+- --list-column-names will list the column names of the specified page in the spread sheet. This is used to configure the mapping of the spread sheet columns to the posters. It looks at the [sheet] section in the config file to determine which row contains the sheet column names. Invoke this without providing other switches or options, like so: $ python3 -m lammpster --list-column-names  
+- --list-sheet-pages will list the page names in the spread sheet. Use this to explore a spread sheet of which the owner forgot to specify which page to query. By default, the page of interest is named sheet1, but owners have the option of renaming sheets. Invoke this without providing other switches or options, like so: $ python3 -m lammpster --list-sheet-pages  
+- --list-column-values x will list all values in column x in the specified page in the spread sheet. Use this to find a record identifiers, for instance. Provide the index of the column to list. Usually that is column 1. Invoke this without providing other switches or options, like so: $ python3 -m lammpster --list-column-values 1
 
   
 For added support and feedback, contact OmegaJunior Consultancy 
