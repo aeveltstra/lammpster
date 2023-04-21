@@ -5,333 +5,18 @@
 #
 # Copyright OmegaJunior Consultancy
 # Since 2021-10-11
-# Version 2.23.411.2059
+# Version 2.23.420.2300
 #
 """
 
-import datetime
 import os
 import sys
 from io import BytesIO
-from configparser import ConfigParser, NoOptionError
-from functools import partial
-from string import Template
-from typing import Any, List, Union, Optional
-from urllib.error import URLError
 from PIL import Image
-import gspread
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
-
-def list_headers() -> List[str]:
-    """
-    List the headers in the spread sheet / database.
-    List them in the same order as they appear.
-    In case of a spread sheet, they appear as column headers
-    next to each other. In case of many a database table
-    layout, they appear as row headers underneath each other.
-    """
-
-    # we need an empty 0 header. if we don't supply one,
-    # the spreadsheet won't find the 1st column.
-    return [
-        "",
-        "Case ID",
-        "Created At",
-        "Created By",
-        "Last Modified At",
-        "Last Modified By",
-        "Case Status",
-        "Poster Generated At",
-        "Given Name",
-        "Chosen Name",
-        "Aliases",
-        "Birth Year",
-        "Birth Year Accuracy",
-        "Last Seen Date",
-        "Last Seen Date Accuracy",
-        "Last Seen Location",
-        "Last Seen Wearing",
-        "Last Seen Activity",
-        "Who to Contact If Found",
-        "Image Path",
-        "Image Path 2",
-        "Disappearance Circumstances",
-        "Eyes",
-        "Hair",
-        "Height",
-        "Identifying Features",
-        "Other Notes",
-        "Pronouns",
-        "Race",
-        "Weight",
-    ]
-
-
-def get_cell_value_for_header(
-    page,
-    row_index: int,
-    header: str
-) -> Union[str, None]:
-    """
-    Retrieve the value of the cell specified by row_index
-    for the column specified by header.
-
-    Parameters
-    ----------
-    page: Google Sheets Page, required
-        The Google Sheets Page to look in.
-    row_index: int, required
-        The row in which to look.
-    header: str, required
-        The caption of the column in which to look.
-
-    Returns
-    -------
-    str | None
-          None if the cell was not found. Otherwise its
-          contents as a string. We are not going to
-          pretend that sheet data types exist.
-    """
-
-    header_index = list_headers().index(header)
-    if not header_index:
-        return None
-    cell = page.cell(row_index, header_index)
-    if not cell:
-        return None
-    return cell.value
-
-
-def get_current_year() -> int:
-    """
-    Retrieves the year number of today's date,
-    whatever that is at the moment of execution.
-    """
-    return datetime.date.today().year
-
-
-def get_sheet(keys_file: str, sheet_id: str):
-    """
-    Finds and returns a Google Sheet based on its ID and
-    the credentials to access it, as specified in keys_file.
-
-    Parameters
-    ----------
-    keys_file: str, required
-        File path that specifies in which file the keys are
-        stored, that give access to the Google Sheet that is
-        specified in sheet_id. Check the gspread docs to see
-        what format it must have and how to obtain them.
-    sheet_id: str, required
-        An identity for the Google Sheet as provided by Google.
-        When you open the sheet in your web browser, its ID is
-        shown as the weird code with numbers and letters in the
-        address bar.
-
-    Returns
-    -------
-    sheet | KeyError
-        KeyError, if the gspread module was unable to retrieve a
-        service account based on the provided keys file
-        or if the passed-in sheet_id does not lead to an
-        existing or accessible Google Sheet.
-        Otherwise, the Google Sheet.
-    """
-
-    if not keys_file:
-        return KeyError(
-            "Please set file name for service account in config."
-        )
-    if not os.path.exists(keys_file):
-        msg = (
-            "The file name for service account set in the config file, "
-            "does not lead to any existing file. Please check. The "
-            f"setting points to: {keys_file}."
-        )
-        return KeyError(msg)
-    if not sheet_id:
-        return KeyError(
-            "Please set the identity of the sheet to read in config."
-        )
-    client = gspread.service_account(keys_file)
-    if not client:
-        return KeyError(
-            "Failed to create a client to talk to Google Sheets."
-        )
-    maybe_sheet = client.open_by_key(sheet_id)
-    if not maybe_sheet:
-        return KeyError(
-            "Failed to open the requested Google Sheet."
-        )
-    return maybe_sheet
-
-
-def get_page_names(sheet) -> List[str]:
-    """
-    Gets all names of the pages found in the sheet.
-
-    Parameters
-    ----------
-    - sheet: required
-        The Google Worksheet that contains the
-        pages of which the names must be returned.
-
-    Returns
-    -------
-    page names: a list of strings. May be empty.
-
-    Exceptions
-    ----------
-    - When no sheet was provided.
-    - When sheet is not a Google Worksheet.
-
-    """
-
-    pages = sheet.worksheets()
-    titles = [page.title for page in pages]
-    return titles
-
-
-def get_page(sheet, page_name: str):
-    """
-    Finds and returns a named page in
-    a Google Worksheet.
-
-    Parameters
-    ----------
-    - sheet : Google Worksheet, required
-        The source that contains the page
-        to return.
-    - page_name : str, required
-        The name of the page to find in the
-        passed-in sheet.
-
-    Returns
-    -------
-    page
-        The found Google Worksheet Page.
-        May be None.
-
-    Exceptions
-    ----------
-    - When sheet is not a Google Worksheet.
-    - When no page was located that bears
-      the passed-in page_name.
-    """
-
-    return sheet.worksheet(page_name)
-
-
-def get_page_column_names(page, row_index: int) -> Union[List[str], None]:
-    """
-    Finds all the column names of a spreadsheet page.
-    Column names are assumed to be the values found in the cells of the
-    row indicated by the row_index, in the order of appearance from
-    low (left) to high (right).
-    """
-
-    if not page:
-        return None
-    cells = page.row_values(row_index)
-    if not cells:
-        return None
-    return cells
-
-
-def get_column_values(page, column_index: int) -> Union[List[str], None]:
-    """
-    Finds the contents of all the cells in the given page, that are
-    part of the column indicated by the column_index, in the order
-    of appearance from low (top) to high (bottom).
-    """
-
-    if not page:
-        return None
-    if 0 == column_index:
-        return None
-    cells = page.col_values(column_index)
-    if not cells:
-        return None
-    return cells
-
-
-def create_profile(
-    page,
-    case_row_index: int
-) -> Union[dict[str, Any], None]:
-    """
-    Takes the cell values from a row, and turns them into a profile
-    for injecting into a poster.
-    """
-
-    if not page or not case_row_index:
-        return None
-    get_cells_for_row = partial(get_cell_value_for_header, page)
-    get_cell_value = partial(get_cells_for_row, case_row_index)
-    birth_year = get_cell_value("Birth Year")
-    age = None
-    if birth_year:
-        age = get_current_year() - int(birth_year)
-    return {
-        "Age": age,
-        "Birth Year": birth_year,
-        "Case ID": get_cell_value("Case ID"),
-        "Chosen Name": get_cell_value("Chosen Name"),
-        "Disappearance Circumstances": get_cell_value(
-            "Disappearance Circumstances"
-        ),
-        "Eyes": get_cell_value("Eyes"),
-        "Hair": get_cell_value("Hair"),
-        "Height": get_cell_value("Height"),
-        "Identifying Features": get_cell_value("Identifying Features"),
-        "Image 1 Path": get_cell_value("Image Path"),
-        "Image 2 Path": get_cell_value("Image Path 2"),
-        "Last Seen Date": get_cell_value("Last Seen Date"),
-        "Last Seen Location": get_cell_value("Last Seen Location"),
-        "Last Seen Wearing": get_cell_value("Last Seen Wearing"),
-        "Other Notes": get_cell_value("Other Notes"),
-        "Pronouns": get_cell_value("Pronouns"),
-        "Race": get_cell_value("Race"),
-        "Weight": get_cell_value("Weight"),
-        "Who to Contact If Found": get_cell_value("Who to Contact If Found"),
-    }
-
-
-def find_first(predicate, haystack):
-    """
-    Hopes to find the first item in haystack, that matches predicate.
-    """
-
-    return next((i for i in haystack if predicate(i)), None)
-
-
-def is_first_column(cell):
-    """
-    Determines whether the passed-in cell is the first in a row.
-    """
-
-    return cell.col == 1
-
-
-def find_row_index(page, case_identifier):
-    """
-    Attempts to find the row index of the cell that contains the
-    passed-in case identifier. You could pass in any value known
-    to exist, but you should pass in case identifiers. You do you,
-    though.
-    """
-
-    if not page or not case_identifier:
-        return None
-    cells = page.findall(case_identifier)
-    if not cells:
-        return None
-    cell = find_first(is_first_column, cells)
-    if not cell:
-        return None
-    return cell.row
+import config_handler
+import profile_extractor
 
 
 def read_case_id_from_command_line():
@@ -387,7 +72,7 @@ def list_values_for_which_column():
     if (i + 1) < len(sys.argv):
         try:
             return int(sys.argv[i + 1])
-        except:
+        except Exception as _:
             msg = (
                 "The value that should identify the column, "
                 "of which the values should get returned, "
@@ -399,159 +84,96 @@ def list_values_for_which_column():
     return None
 
 
-def apply_profile_to_template(profile, template_contents) -> str:
-    """
-    Substitutes known variables in the template contents
-    with values from the profile. This will fail if expected
-    variables do not exist in the template contents.
-
-    Parameters
-    ----------
-    - profile: dict, required, with fields expected but not required:
-      - Chosen Name,
-      - Age,
-      - Race,
-      - Height,
-      - Weight,
-      - Eyes,
-      - Hair,
-      - Pronouns,
-      - Last Seen Date,
-      - Last Seen Location,
-      - Last Seen Wearing,
-      - Identifying Features,
-      - Disappearance Circumstances,
-      - Who to Contact If Found,
-      - Image Path,
-      - Image Path 2,
-      - Other Notes
-
-    - template_contents: str, required, with these required variables:
-      - name,
-      - age,
-      - race,
-      - height,
-      - weight,
-      - eyes,
-      - hair,
-      - pronouns,
-      - last_seen_on,
-      - last_seen_where,
-      - last_seen_wearing,
-      - identifying_features,
-      - disappearance_circumstances,
-      - contact_if_found,
-      - image_path_1,
-      - image_path_2,
-      - other_notes
-
-    Returns
-    -------
-    str: The substitution result.
-    """
-
-    if not profile or not template_contents:
-        return None
-
-    try:
-        result = Template(template_contents).substitute(
-            name=profile.get("Chosen Name", ""),
-            age=profile.get("Age", ""),
-            race=profile.get("Race", ""),
-            height=profile.get("Height", ""),
-            weight=profile.get("Weight", ""),
-            eyes=profile.get("Eyes", ""),
-            hair=profile.get("Hair", ""),
-            pronouns=profile.get("Pronouns", ""),
-            last_seen_on=profile.get("Last Seen Date", ""),
-            last_seen_where=profile.get("Last Seen Location", ""),
-            last_seen_wearing=profile.get("Last Seen Wearing", ""),
-            identifying_features=profile.get("Identifying Features", ""),
-            disappearance_circumstances=profile.get(
-                "Disappearance Circumstances",
-                ""
-            ),
-            contact_if_found=profile.get("Who to Contact If Found", ""),
-            image_path_1=profile.get(
-                "Image Path", "templates/transparent-1020x1024.png"
-            ),
-            image_path_2=profile.get(
-                "Image Path 2", "templates/transparent-1020x1024.png"
-            ),
-            other_notes=profile.get("Other Notes", ""),
-        )
-        return result
-    except KeyError as err:
-        msg = (
-            "Error: failed to apply profile. "
-            "Either the placeholder was not found, "
-            f"or it was not given a substitute: {err}."
-        )
-        print(msg)
-        raise
-
-
 def get_webdriver():
     """
-    Attempts to obtain a web driver based on any 
-    web browser installed on the system. 
+    Attempts to obtain a web driver based on any
+    web browser installed on the system.
     """
     try:
         attempt = webdriver.Chrome()
         if attempt:
             return attempt
-    except:
+    except Exception as _:
         attempt = None
     if not attempt:
         try:
             attempt = webdriver.Safari()
             if attempt:
                 return attempt
-        except:
+        except Exception as _:
             attempt = None
     if not attempt:
         try:
             attempt = webdriver.Firefox()
             if attempt:
                 return attempt
-        except:
+        except Exception as _:
             attempt = None
     if not attempt:
         try:
             attempt = webdriver.Edge()
             if attempt:
                 return attempt
-        except:
+        except Exception as _:
             attempt = None
     return None
 
 
-def transform_svg_2_pdf(in_svg_path, out_pdf_path):
+def transform_svg_2_pdf(svg_browser_element, out_pdf_path):
     """
     Turns the input SVG file into a PDF file and writes it
     to the output path.
+
+    Parameters
+    ----------
+    svg_browser_element: required
+        the result of load_svg_in_browser(path)
+    out_pdf_path: str, required
+        the path to which the PDF file needs to get written
+
+    Returns
+    -------
+    The same SVG browser element as passed in.
     """
-    with get_webdriver() as driver:
-        driver.get(f"file://{os.path.abspath(in_svg_path)}")
-        driver.implicitly_wait(5)
-        png = driver.find_element(By.TAG_NAME, "svg").screenshot_as_png
-        img = Image.open(BytesIO(png))
-        img.save(out_pdf_path, "PDF", quality=100)
-    return None
+
+    png = svg_browser_element.screenshot_as_png
+    img = Image.open(BytesIO(png))
+    img.save(out_pdf_path, "PDF", quality=100)
+    return svg_browser_element
 
 
-def transform_svg_2_png(in_svg_path, out_png_path):
+def transform_svg_2_png(svg_browser_element, out_png_path):
     """
-    Turns the input SVG file into a PNG file and writes it
+    Turns the input SVG browser element into a PNG file and writes it
     to the output path.
+
+    Parameters
+    ----------
+    svg_browser_element: required
+        the result of load_svg_in_browser(path)
+    out_png_path: str, required
+        the path to which the PNG file needs to get written
+
+    Returns
+    -------
+    The same SVG browser element as passed in.
     """
-    with get_webdriver() as driver:
-        driver.get(f"file://{os.path.abspath(in_svg_path)}")
-        driver.implicitly_wait(5)
-        png = driver.find_element(By.TAG_NAME, "svg").screenshot_as_png
-        img = Image.open(BytesIO(png))
-        img.save(out_png_path, "PNG", quality=100)
-    return None
+
+    png = svg_browser_element.screenshot_as_png
+    img = Image.open(BytesIO(png))
+    img.save(out_png_path, "PNG", quality=100)
+    return svg_browser_element
+
+
+def load_svg_in_browser(svg_path, driver):
+    """
+    Opens the passed-in file path in the first web browser
+    that can be found installed on the system.
+    """
+
+    driver.get(f"file://{os.path.abspath(svg_path)}")
+    driver.implicitly_wait(5)
+    return driver.find_element(By.TAG_NAME, "svg")
 
 
 def create_poster(
@@ -601,7 +223,7 @@ def create_poster(
     svg_poster = None
     try:
         with open(template_path, "r", encoding="utf-8") as template:
-            svg_poster = apply_profile_to_template(
+            svg_poster = profile_extractor.apply_profile_to_template(
                              profile,
                              template.read()
                          )
@@ -623,161 +245,11 @@ def create_poster(
     with open(file_name_svg, "w", encoding="utf-8") as output_file:
         output_file.write(svg_poster)
         output_file.close()
-    transform_svg_2_png(file_name_svg, f"{file_name_bare}.png")
-    transform_svg_2_pdf(file_name_svg, f"{file_name_bare}.pdf")
+    with get_webdriver() as driver:
+        browser_element = load_svg_in_browser(file_name_svg, driver)
+        transform_svg_2_png(browser_element, f"{file_name_bare}.png")
+        transform_svg_2_pdf(browser_element, f"{file_name_bare}.pdf")
     return None
-
-
-def maybe_get_config_section_items(
-    config: ConfigParser, section_name: str, default: Optional[dict] = None
-) -> Union[dict, None]:
-    """
-    Reads items from sections of the configuration file and returns them
-    as a dict. Used for instance, to turn the listing of channels into
-    an enumeration.
-
-    Parameters
-    ----------
-    - config: ConfigParser, required
-        The thing that can parse the configuration file.
-    - section_name: str, required
-        Identifies which section of the configuration file to read.
-    - default: dict, optional
-        Something to return in case the section name or entire
-        configuration file cannot be found.
-
-    Returns
-    -------
-    A dict containing the keys and values of a configuration section.
-
-    """
-
-    result = None
-
-    try:
-        result = config.items(section_name)
-        return dict(result)
-
-    except (KeyError, NoOptionError):
-        if default:
-            msg = (
-                f"Info: found no configuration section {section_name}."
-                f" Defaulting to {default}."
-            )
-            print(msg)
-            result = default
-        else:
-            msg = (
-                f"Warning: found no configuration section {section_name}."
-                " No default was provided."
-            )
-            print(msg)
-            result = None
-
-    return result
-
-
-def maybe_get_config_entry(
-    config: ConfigParser,
-    section_name: str,
-    entry_name: str,
-    default: Optional[str] = None,
-) -> Union[str, None]:
-    """
-    Hopes to retrieve a value from the configuration file, identified
-    by the section name and entry name. If no such entry was found,
-    the default value is returned.
-    """
-
-    result = None
-
-    try:
-        result = config.get(section_name, entry_name)
-
-    except (KeyError, NoOptionError):
-        if default:
-            msg = (
-                f"Info: found no entry {entry_name} in configuration "
-                f"section {section_name}. Defaulting to {default}."
-            )
-            print(msg)
-            result = default
-        else:
-            msg = (
-                f"Warning: found no entry {entry_name} in configuration "
-                f"section {section_name}. No default was provided."
-            )
-            print(msg)
-            result = None
-
-    return result
-
-
-def get_sheet_page(config, sheet):
-    """
-    Attempts to retrieve the page within the sheet, that is identified
-    by the configuration file.
-
-    Parameters
-    ----------
-    - config: ConfigParser, required. The configuration file parser,
-      with the configuration file already loaded.
-
-    Returns
-    -------
-    Either a KeyError, or a Google Sheet page.
-    """
-
-    page_name = maybe_get_config_entry(config, "sheet", "page_name")
-    if not page_name:
-        msg = (
-            "Aborting. Missing configuration key: "
-            "'page_name'. "
-            "Read the manual about setting up the configuration file."
-        )
-        return KeyError(msg)
-    maybe_page = get_page(sheet, page_name)
-    if not maybe_page:
-        msg = (
-            f"Spreadsheet has no page named {page_name}. "
-            "Read the manual about setting up the configuration file."
-        )
-        return KeyError(msg)
-    return maybe_page
-
-
-def get_configured_sheet(config):
-    """
-    Attempts to connect to the spreadsheet,
-    as configured by the configuration file.
-
-    Parameters
-    ----------
-    - config: ConfigParser, required. The configuration file parser,
-      with the configuration file already loaded.
-
-    Returns
-    -------
-    Either a KeyError, or a Google Sheet sheet.
-    """
-
-    sheet_id = maybe_get_config_entry(config, "sheet", "google_drive_sheet_id")
-    keys_file = maybe_get_config_entry(config, "account", "keys_file")
-    if not sheet_id or not keys_file:
-        msg = (
-            "Aborting. Missing 1 or more configuration keys: "
-            "'google_drive_sheet_id' or 'keys_file'. "
-            "Read the manual about setting up the configuration file."
-        )
-        return KeyError(msg)
-    maybe_sheet = get_sheet(keys_file, sheet_id)
-    if not maybe_sheet:
-        msg = (
-            "Aborting. No sheet found with identity {sheet_id}. "
-            "Read the manual about setting up the configuration file."
-        )
-        return KeyError(msg)
-    return maybe_sheet
 
 
 def run_on_demand_functions(
@@ -793,15 +265,20 @@ def run_on_demand_functions(
 
     if must_list_sheet_page_names():
         print("All page names in the spread sheet:")
-        print(get_page_names(sheet))
+        print(profile_extractor.get_page_names(sheet))
         sys.exit()
 
     if must_list_sheet_column_names():
         print("All column names in page:")
-        page_column_names_row = maybe_get_config_entry(
-            config, "sheet", "page_column_names_row", "0"
+        page_column_names_row = config_handler.maybe_get_config_entry(
+            config,
+            "sheet",
+            "page_column_names_row", "0"
         )
-        columns = get_page_column_names(page, int(page_column_names_row))
+        columns = profile_extractor.get_page_column_names(
+            page,
+            int(page_column_names_row)
+        )
         print(columns)
         sys.exit()
 
@@ -825,7 +302,7 @@ def run_on_demand_functions(
             f"{str(column_index)} of page:"
         )
         print(msg)
-        cells = get_column_values(page, column_index)
+        cells = profile_extractor.get_column_values(page, column_index)
         print(cells)
         sys.exit()
 
@@ -850,13 +327,12 @@ def main() -> None:
     else:
         print("Retrieving configuration...")
 
-    config = ConfigParser()
-    config.read("./.config")
-    maybe_sheet = get_configured_sheet(config)
+    config = config_handler.read_config()
+    maybe_sheet = profile_extractor.get_configured_sheet(config)
     if isinstance(maybe_sheet, KeyError):
         sys.exit(maybe_sheet)
 
-    maybe_page = get_sheet_page(config, maybe_sheet)
+    maybe_page = profile_extractor.get_sheet_page(config, maybe_sheet)
     if isinstance(maybe_page, KeyError):
         sys.exit(maybe_page)
 
@@ -882,7 +358,7 @@ def main() -> None:
         )
         print(msg)
 
-        case_row_index = find_row_index(maybe_page, case_id)
+        case_row_index = profile_extractor.find_row_index(maybe_page, case_id)
         if not case_row_index:
             msg = (
                 f"Error: No case found with id {case_id}. Use the "
@@ -892,22 +368,22 @@ def main() -> None:
             sys.exit(msg)
 
         print(f"Found case with id {case_id}. Creating profile...")
-        profile = create_profile(maybe_page, case_row_index)
+        profile = profile_extractor.create_profile(maybe_page, case_row_index)
 
-        output_folder = maybe_get_config_entry(
+        output_folder = config_handler.maybe_get_config_entry(
             config,
             "output",
             "folder",
             "~/"
         )
-        output_file_prefix = maybe_get_config_entry(
+        output_file_prefix = config_handler.maybe_get_config_entry(
             config,
             "output",
             "file_prefix",
             ""
         )
 
-        poster_choices = maybe_get_config_section_items(
+        poster_choices = config_handler.maybe_get_config_section_items(
              config,
              "posters",
              {}

@@ -1,94 +1,148 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="8.5in" height="11in" viewBox="0 0 816 1056" lang="en" version="1.1" id="svg37" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<svg width="816" height="1056" viewBox="0 0 816 1056" lang="en" version="1.1"  
+xmlns:xlink="http://www.w3.org/1999/xlink" 
+xmlns="http://www.w3.org/2000/svg" 
+xmlns:svg="http://www.w3.org/2000/svg" 
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:cc="http://creativecommons.org/ns#" 
+xmlns:dc="http://purl.org/dc/elements/1.1/" 
+xmlns:xh="http://www.w3.org/1999/xhtml"
+>
 <title>Lammpster template for Print, Letter</title>
 <defs id="defs11">
-<linearGradient id="linearGradient52678">
-<stop style="stop-color:#4b0287;stop-opacity:1" offset="0" id="stop52674" />
-<stop style="stop-color:#ecc9f3;stop-opacity:1" offset="1" id="stop52676" /></linearGradient>
-<style id="style9">
-<![CDATA[ svg{stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1;background-color:white} p{margin-top:0;padding-top:0} text,div,p{color:#000000;fill:#000000;font-stretch:normal;font-variant:normal;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;paint-order:stroke;text-anchor:start;font-family:Archivo,'SF Pro',Verdana,sans-serif;font-size:13pt;font-style:normal;stroke-width:1} .txt_subtitle{font-family:Archivo,'SF Pro',Verdana,sans-serif;font-size:32pt;font-weight:bold} .txt_title{font-family:Cambria,Georgia,'Times New Roman',Times,serif;font-size:48pt;font-weight:bold} .uri_info{font-weight:bold;font-size:12pt} .email_info{font-size:12pt;font-style:italic} .pane_pink_rounded{fill:#e2d5e7;fill-opacity:1;stroke:#262327;stroke-dasharray:none;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-width:1} .pane_white_rectangle{fill:#ffffff;stroke-dasharray:none;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4} .pane_white_rectangle_bordered{fill-opacity:1;stroke:#000000;stroke-opacity:1} .image_portrait{fill:#fffff1;fill-opacity:1;stroke:#000000;stroke-dasharray:none;stroke-miterlimit:4;stroke-opacity:1;stroke-width:1} ]]></style>
-<linearGradient xlink:href="#linearGradient52678" id="linearGradient52680" x1="412.33212" y1="1003.2967" x2="412.33212" y2="-1.1206114" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.84877293,0,0,0.87291891,47.358857,47.667565)" /></defs>
+  <linearGradient id="linearGradient52678">
+    <stop style="stop-color:#4b0287; stop-opacity:1" offset="0" />
+    <stop style="stop-color:#ecc9f3; stop-opacity:1" offset="1" />
+  </linearGradient>
+  <style>
+    svg{
+      stroke:#000; stroke-linecap:round; stroke-linejoin:round; 
+      stroke-width:1; background-color:white; width:8.5in; height:11in
+    }
+    xh:p{margin-top:0; padding-top:0; vertical-align:top}
+    text,xh:div,xh:p{
+      color:#000000; fill:#000000; font-stretch:normal;
+      font-variant:normal; font-variant-caps:normal;
+      font-variant-east-asian:normal; font-variant-ligatures:normal;
+      font-variant-numeric:normal; paint-order:stroke; text-anchor:start;
+      font-family:Archivo, 'SF Pro', Verdana, sans-serif; font-size:13pt;
+      font-style:normal; stroke-width:1; text-overflow:ellispsis
+    }
+    .txt_subtitle{
+      font-family:Archivo, 'SF Pro', Verdana, sans-serif; 
+      font-size:32pt; font-weight:bold
+    }
+    .txt_title{
+      font-family:Cambria, Georgia, 'Times New Roman', Times, serif; 
+      font-size:48pt; font-weight:bold; text-align:center;
+    }
+    .uri_info{font-weight:bold; font-size:12pt}
+    .email_info{font-size:12pt; font-style:italic}
+    .caption{font-weight:bolder}
+    .pane_pink_rounded{
+      fill:#e2d5e7; fill-opacity:1; stroke:#262327; stroke-dasharray:none; 
+      stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; 
+      stroke-opacity:1; stroke-width:1
+    }
+    .pane_white_rectangle{fill:#ffffff; stroke-dasharray:none; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4}
+    .pane_white_rectangle_bordered{fill-opacity:1; stroke:#000000; stroke-opacity:1}
+    .image_portrait{fill:#fffff1; fill-opacity:1; stroke:#000000; stroke-dasharray:none; stroke-miterlimit:4; stroke-opacity:1; stroke-width:1}
+  </style>
+  <linearGradient xlink:href="#linearGradient52678" id="linearGradient52680"
+    x1="47.5" x2="47.5" y1="1060" y2="47.5" gradientUnits="userSpaceOnUse"
+    gradientTransform="matrix(0.84877293,0,0,0.87291891,47.358857,47.667565)"/>
+  <clipPath id="clipText250x24"><rect x="0" y="0" width="250"
+    height="24"/></clipPath>
+  <clipPath id="clipText300x12"><rect x="0" y="0" width="300"
+    height="12"/></clipPath>
+  <clipPath id="clipText300x24"><rect x="0" y="0" width="300"
+    height="24"/></clipPath>
+</defs>
+
 <g id="background-layer" style="display:block">
-<rect style="fill:url(#linearGradient52680);fill-opacity:1;stroke:none;" id="rectangle-with-bg-gradient-white-to-purple" width="720" height="960" x="48.5" y="48.5">
-<title>Background gradient, white to purple</title></rect>
-<rect style="stroke:#ffffff;" id="pane-body" width="671" height="743" x="72.5" y="240.5" class="pane_white_rectangle">
-<title>Body pane</title></rect>
-<rect id="pane-person-name" width="671" height="51" x="72.5" y="164.5" class="pane_white_rectangle pane_white_rectangle_bordered">
-<title>Person Name Pane</title></rect>
-<rect style="fill:#f7f7ee;fill-opacity:1;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" id="pane-title" width="671" height="71" x="72.5" y="72.5" rx="5" ry="5">
-<title>Title</title></rect></g>
+  <rect style="fill:url(#linearGradient52680); fill-opacity:1; stroke:none; " 
+  id="rectangle-with-bg-gradient-white-to-purple" width="720" height="1060"
+  x="47.5" y="47.5"><title>Background gradient, white to purple</title></rect>
+  <rect style="stroke:#ffffff; " id="pane-body" width="672" height="795"
+  x="72.5" y="240.5" class="pane_white_rectangle"><title>Body pane</title></rect>
+  <rect id="pane-person-name" width="671" height="51" x="72.5" y="164.5" class="pane_white_rectangle pane_white_rectangle_bordered"><title>Person Name Pane</title></rect>
+  <rect style="fill:#f7f7ee; fill-opacity:1; stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-dasharray:none" id="pane-title" width="671" height="71" x="72.5" y="72.5" rx="5" ry="5"><title>Title</title></rect>
+</g>
+
 <g id="body-panes-layer" style="display:block">
-<rect id="pane-more-info" width="383" height="118" x="96.5" y="840.5" rx="15" ry="15" class="pane_pink_rounded">
-<title>More info pane</title></rect>
-<rect style="display:block" id="pane-contact-if-found" width="216" height="138" x="504.5" y="529.5" rx="15" ry="15" class="pane_pink_rounded">
-<title>Contact if found pane</title></rect>
-<rect id="pane-disappearance-circumstances" width="383" height="240" x="96.5" y="575.5" class="pane_white_rectangle pane_white_rectangle_bordered">
-<title>Disappearance circumstances pane</title></rect>
-<image href="${image_path_2}" width="216" height="288" id="image-portrait-2" x="504.5" y="672.5" class="image_portrait">
-<title>Portrait 2</title></image>
-<image href="${image_path_1}" width="216" height="288" id="image-portrait-1" style="image-rendering:optimizeQuality" x="96.5" y="264.5" class="image_portrait">
-<title>Portrait 1</title></image></g>
+  <rect id="pane-more-info" width="383" height="118" x="92.5" y="840.5" rx="15" ry="15" class="pane_pink_rounded"><title>More info pane</title></rect>
+  <rect style="display:block" id="pane-contact-if-found" width="216" height="138" x="504.5" y="529.5" rx="15" ry="15" class="pane_pink_rounded"><title>Contact if found pane</title></rect>
+  <rect id="pane-disappearance-circumstances" width="383" height="240" x="92.5" y="575.5" class="pane_white_rectangle pane_white_rectangle_bordered"><title>Disappearance circumstances pane</title></rect>
+  <image href="${image_path_2}" width="216" height="288" id="image-portrait-2" x="504.5" y="672.5" class="image_portrait"><title>Portrait 2</title></image>
+  <image href="${image_path_1}" width="216" height="288"
+  id="image-portrait-1" style="image-rendering:optimizeQuality" x="92.5" y="264.5" class="image_portrait"><title>Portrait 1</title></image>
+</g>
+
 <g id="text-layer" style="display:block">
-<text class="txt_title" x="88.089325" y="135.02727" width="410" height="100" id="text-name-caption">MISSING PERSON</text>
-<text x="96.013954" y="206.75758" width="701.5" id="text-name-value" class="txt_subtitle">$name</text>
-<text x="335.38049" y="277.70563" width="701.5" id="text-age-caption">Age:</text>
-<text x="573.0368" y="277.70563" width="701.5" id="text-race-caption">Race:</text>
-<text x="335.38049" y="379.55841" width="701.5" id="text-height-caption">Height:</text>
-<text x="640.93866" y="379.55841" width="701.5" id="text-weight-value">$weight</text>
-<text x="335.38049" y="405.02161" width="701.5" id="text-eyes-caption">Eyes:</text>
-<text x="573.0368" y="405.02161" width="701.5" id="text-hair-caption">Hair:</text>
-<text x="519.37524" y="550.39392" width="701.5" id="text-contact-caption">If seen/located, contact:</text>
-<text x="518.40845" y="573.50812" width="701.5" id="text-contact-value">$contact_if_found</text>
-<text x="157.69521" y="566.60425" width="701.5" id="text-disappearance-caption">Circumstances of disappearance:</text>
-<text x="108.29128" y="599.46448" width="701.5" id="text-disappearance-value">$disappearance_circumstances</text>
-<text x="335.38049" y="328.63199" width="701.5" id="text-last-seen-date-caption">Last seen:</text>
-<text x="335.38049" y="303.16882" width="701.5" id="text-pronouns-caption">Pronouns:</text>
-<text x="335.38049" y="354.09521" width="701.5" id="text-last-seen-location-caption">Where:</text>
-<text x="428.74551" y="277.70563" width="701.5" id="text-age-value">$age</text>
-<text x="640.93866" y="277.70563" width="701.5" id="text-race-value">$race</text>
-<text x="428.74551" y="379.55841" width="701.5" id="text-height-value">$height</text>
-<text x="573.0368" y="379.55841" width="701.5" id="text-weight-caption">Weight:</text>
-<text x="428.74551" y="405.02161" width="701.5" id="text-eyes-value">$eyes</text>
-<text x="640.93866" y="405.02161" width="701.5" id="text-hair-value">$hair</text>
-<text x="428.74551" y="328.63199" width="701.5" id="text-last-seen-date-value">$last_seen_on</text>
-<text x="428.74551" y="303.16882" width="701.5" id="text-pronouns-value">$pronouns</text>
-<text x="428.74551" y="354.09521" width="701.5" id="text-last-seen-location-value">$last_seen_where</text>
-<text x="335.38049" y="430.48474" width="701.5" id="text-last-seen-wearing-caption">Clothing:</text>
-<text x="428.74551" y="430.48474" width="701.5" id="text-last-seen-wearing-value">$last_seen_wearing</text>
-<text x="335.38049" y="455.94794" width="701.5" id="text-identifying-features-caption">Features:</text>
-<text x="335.38049" y="480.34705" width="701.5" id="text-other-notes-caption">Notes:</text>
-<text x="428.74551" y="455.94794" width="701.5" id="text-identifying-features-value">$identifying_features</text>
-<text x="428.74551" y="480.34705" width="701.5" id="text-other-notes-value">$other_notes</text>
-<image x="105.5" y="849.5" height="98" width="38" href="templates/lammp-only-lantern.svg.2023_01_19_20_22.svg" />
-<text xml:space="preserve" x="149.21161" y="862.50629" id="text-info-uri" class="uri_info">
-<tspan x="149.21161" y="862.50629">For More Information:</tspan>
-<tspan x="149.21161" y="882.50629">Visit LAMMP.TransDoeTaskForce.org</tspan></text>
-<text xml:space="preserve" x="149.21161" y="904.94482" id="text-info-email" class="email_info">
-<tspan x="149.21161" y="904.94482">Do you know someone who is LGBTQ+ and </tspan>
-<tspan x="149.21161" y="924.94482">missing? Let us help!</tspan>
-<tspan x="149.21161" y="944.94482">Email LAMMP@transdoetaskforce.org</tspan></text></g>
+  <text class="txt_title" x="92.5" y="135.5" width="630" height="100" id="text-name-caption">MISSING PERSON</text>
+  <text x="92.5" y="206.5" width="701.5" id="text-name-value" class="txt_subtitle">$name</text>
+  <text class="caption" x="335.5" y="277.5" width="100" id="text-age-caption">Age:</text>
+  <text class="caption" x="573.5" y="277.5" width="100" id="text-race-caption">Race:</text>
+  <text class="caption" x="335.5" y="379.5" width="100" id="text-height-caption">Height:</text>
+  <text x="640.5" y="379.5" width="250" id="text-weight-value">$weight</text>
+  <text class="caption" x="335.5" y="405.5" width="100" id="text-eyes-caption">Eyes:</text>
+  <text class="caption" x="573.5" y="405.5" width="100" id="text-hair-caption">Hair:</text>
+  <text class="caption" x="509.5" y="550.5" width="100" id="text-contact-caption">If seen/located, contact:</text>
+  <foreignObject x="509.5" y="545.5" width="205" height="105" id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
+  <text class="caption" x="157.5" y="566.5" width="100" id="text-disappearance-caption">Circumstances of disappearance:</text>
+  <foreignObject x="108.5" y="579.5" width="250" height="400"
+  id="text-disappearance-value"><xh:p>$disappearance_circumstances</xh:p></foreignObject>
+  <text class="caption" x="335.5" y="328.5" width="100" id="text-last-seen-date-caption">Last seen:</text>
+  <text class="caption" x="335.5" y="303.5" width="100" id="text-pronouns-caption">Pronouns:</text>
+  <text class="caption" x="335.5" y="354.5" width="100" id="text-last-seen-location-caption">Where:</text>
+  <text x="428.5" y="277.5" width="200" id="text-age-value">$age</text>
+  <text x="640.5" y="277.5" width="200" id="text-race-value">$race</text>
+  <text x="428.5" y="379.5" width="200" id="text-height-value">$height</text>
+  <text class="caption" x="573.5" y="379.5" width="100" id="text-weight-caption">Weight:</text>
+  <text x="428.5" y="405.5" width="200" id="text-eyes-value">$eyes</text>
+  <text x="640.5" y="405.5" width="200" id="text-hair-value">$hair</text>
+  <text x="428.5" y="328.5" width="200" id="text-last-seen-date-value">$last_seen_on</text>
+  <text x="428.5" y="303.5" width="200" id="text-pronouns-value">$pronouns</text>
+  <text x="428.5" y="354.5" width="200" id="text-last-seen-location-value">$last_seen_where</text>
+  <text class="caption" x="335.5" y="430.5" width="100" height="12" id="text-last-seen-wearing-caption">Clothing:</text>
+  <text x="428.5" y="430.5" width="300" height="12" clip-path="url(#clipText300x12)" id="text-last-seen-wearing-value">$last_seen_wearing</text>
+  <text class="caption" x="335.5" y="455.5" width="100" height="12" id="text-identifying-features-caption">Features:</text>
+  <text x="428.5" y="455.5" width="300" height="24" clip-path="url(#clipText300x24)" id="text-identifying-features-value">$identifying_features</text>
+  <text class="caption" x="335.5" y="480.5" width="100" id="text-other-notes-caption">Notes:</text>
+  <foreignObject x="428.5" y="480.5" width="300" height="24"
+    clip-path="url(#clipText300x24)" id="text-other-notes-value"><xh:p>$other_notes</xh:p></foreignObject>
+  <image x="105.5" y="849.5" height="98" width="38" href="../templates/lammp-only-lantern.svg.2023_01_19_20_22.svg" />
+  <text xml:space="preserve" x="149.5" y="862.5" id="text-info-uri" class="uri_info">
+  <tspan class="caption" x="149.5" y="862.5">For More Information:</tspan>
+  <tspan x="149.5" y="882.5">Visit LAMMP.TransDoeTaskForce.org</tspan></text>
+  <text xml:space="preserve" x="149.5" y="904.5" id="text-info-email" class="email_info">
+  <tspan x="149.5" y="904.5">Do you know someone who is LGBTQ+ and </tspan>
+  <tspan x="149.5" y="924.5">missing? Let us help!</tspan>
+  <tspan x="149.5" y="944.5">Email LAMMP@transdoetaskforce.org</tspan></text>
+</g>
+
 <metadata>
-<rdf:RDF>
-<cc:Work rdf:about="">
-<dc:title>Lammpster template for Print, Letter</dc:title>
-<dc:date>January 16,2023</dc:date>
-<dc:creator>
-<cc:Agent>
-<dc:title>A.E.Veltstra</dc:title></cc:Agent></dc:creator>
-<dc:publisher>
-<cc:Agent>
-<dc:title>OmegaJunior Consultancy</dc:title></cc:Agent></dc:publisher>
-<dc:language>English</dc:language>
-<dc:contributor>
-<cc:Agent>
-<dc:title>Anthony Redgrave, Viktor Veltstra, Ænðr Veltstra</dc:title></cc:Agent></dc:contributor>
-<cc:license rdf:resource="http://creativecommons.org/licenses/by-nc/4.0/" /></cc:Work>
-<cc:License rdf:about="http://creativecommons.org/licenses/by-nc/4.0/">
-<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction" />
-<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution" />
-<cc:requires rdf:resource="http://creativecommons.org/ns#Notice" />
-<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution" />
-<cc:prohibits rdf:resource="http://creativecommons.org/ns#CommercialUse" />
-<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks" /></cc:License></rdf:RDF>
+  <rdf:RDF>
+  <cc:Work rdf:about="">
+  <dc:title>Lammpster template for Print, Letter</dc:title>
+  <dc:date>January 16,2023</dc:date>
+  <dc:creator>
+  <cc:Agent>
+  <dc:title>A.E.Veltstra</dc:title></cc:Agent></dc:creator>
+  <dc:publisher>
+  <cc:Agent>
+  <dc:title>OmegaJunior Consultancy</dc:title></cc:Agent></dc:publisher>
+  <dc:language>English</dc:language>
+  <dc:contributor>
+  <cc:Agent>
+  <dc:title>Anthony Redgrave, Viktor Veltstra, Ænðr Veltstra</dc:title></cc:Agent></dc:contributor>
+  <cc:license rdf:resource="http://creativecommons.org/licenses/by-nc/4.0/" /></cc:Work>
+  <cc:License rdf:about="http://creativecommons.org/licenses/by-nc/4.0/">
+  <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction" />
+  <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution" />
+  <cc:requires rdf:resource="http://creativecommons.org/ns#Notice" />
+  <cc:requires rdf:resource="http://creativecommons.org/ns#Attribution" />
+  <cc:prohibits rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+  <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks" /></cc:License></rdf:RDF>
 </metadata>
 </svg> 
