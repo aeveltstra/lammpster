@@ -16,7 +16,8 @@ from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import config_handler
-import profile_extractor
+import db_handler_sheets
+import profile_maker
 
 
 def read_case_id_from_command_line():
@@ -177,6 +178,7 @@ def load_svg_in_browser(svg_path, driver):
 
 
 def create_poster(
+    config,
     profile,
     channel,
     template_path,
@@ -191,6 +193,8 @@ def create_poster(
 
     Parameters
     ----------
+    - config: ConfigParser, required.
+        Should be a config parser with the configuration preloaded.
     - profile: dict, required. Should come from the function
       create_profile().
     - channel: str, required. The name of a known channel. Will be used
@@ -209,7 +213,8 @@ def create_poster(
     """
 
     if (
-        not profile
+        not config
+        or not profile
         or not channel
         or not template_path
         or not output_folder
@@ -223,7 +228,7 @@ def create_poster(
     svg_poster = None
     try:
         with open(template_path, "r", encoding="utf-8") as template:
-            svg_poster = profile_extractor.apply_profile_to_template(
+            svg_poster = profile_maker.apply_profile_to_template(
                              profile,
                              template.read()
                          )
@@ -265,7 +270,7 @@ def run_on_demand_functions(
 
     if must_list_sheet_page_names():
         print("All page names in the spread sheet:")
-        print(profile_extractor.get_page_names(sheet))
+        print(profile_maker.get_page_names(sheet))
         sys.exit()
 
     if must_list_sheet_column_names():
@@ -275,7 +280,7 @@ def run_on_demand_functions(
             "sheet",
             "page_column_names_row", "0"
         )
-        columns = profile_extractor.get_page_column_names(
+        columns = profile_maker.get_page_column_names(
             page,
             int(page_column_names_row)
         )
@@ -302,7 +307,7 @@ def run_on_demand_functions(
             f"{str(column_index)} of page:"
         )
         print(msg)
-        cells = profile_extractor.get_column_values(page, column_index)
+        cells = profile_maker.get_column_values(page, column_index)
         print(cells)
         sys.exit()
 
@@ -328,11 +333,11 @@ def main() -> None:
         print("Retrieving configuration...")
 
     config = config_handler.read_config()
-    maybe_sheet = profile_extractor.get_configured_sheet(config)
+    maybe_sheet = db_handler_sheets.get_configured_sheet(config)
     if isinstance(maybe_sheet, KeyError):
         sys.exit(maybe_sheet)
 
-    maybe_page = profile_extractor.get_sheet_page(config, maybe_sheet)
+    maybe_page = db_handler_sheets.get_sheet_page(config, maybe_sheet)
     if isinstance(maybe_page, KeyError):
         sys.exit(maybe_page)
 
@@ -358,7 +363,7 @@ def main() -> None:
         )
         print(msg)
 
-        case_row_index = profile_extractor.find_row_index(maybe_page, case_id)
+        case_row_index = db_handler_sheets.find_row_index(maybe_page, case_id)
         if not case_row_index:
             msg = (
                 f"Error: No case found with id {case_id}. Use the "
@@ -368,7 +373,11 @@ def main() -> None:
             sys.exit(msg)
 
         print(f"Found case with id {case_id}. Creating profile...")
-        profile = profile_extractor.create_profile(maybe_page, case_row_index)
+        profile = profile_maker.create(
+            config,
+            maybe_page,
+            case_row_index
+        )
 
         output_folder = config_handler.maybe_get_config_entry(
             config,
@@ -397,6 +406,7 @@ def main() -> None:
         print("Generating and saving posters....")
         for channel, template in poster_choices.items():
             create_poster(
+                config,
                 profile,
                 channel,
                 template,

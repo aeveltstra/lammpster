@@ -1,6 +1,6 @@
 """
-# Extracts a profile for a specific person from the
-# specified data store. A Google Sheet is expected.
+# Connects to Google Sheets as a data store.
+# Used as part of Lammpster.
 #
 # Copyright OmegaJunior Consultancy
 # Since 2021-10-11
@@ -8,72 +8,41 @@
 #
 """
 
-import datetime
 import os
-from functools import partial
-from string import Template
-from typing import Any, List, Union
+from typing import List, Union
 import gspread
 import config_handler
 
 
-def get_current_year() -> int:
+def get_expected_fields(config) -> List[str]:
     """
-    Retrieves the year number of today's date,
-    whatever that is at the moment of execution.
-    """
-    return datetime.date.today().year
-
-
-def list_headers() -> List[str]:
-    """
-    List the headers in the spread sheet / database.
+    List the headers in the profile data store.
     List them in the same order as they appear.
     In case of a spread sheet, they appear as column headers
     next to each other. In case of many a database table
     layout, they appear as row headers underneath each other.
-    """
 
-    # we need an empty 0 header. if we don't supply one,
-    # the spreadsheet won't find the 1st column.
+    Parameters
+    ----------
+    - config: ConfigParser, required
+        Must be preloaded with the local configuration file.
+    """
     return [
-        "",
-        "Case ID",
-        "Created At",
-        "Created By",
-        "Last Modified At",
-        "Last Modified By",
-        "Case Status",
-        "Poster Generated At",
-        "Given Name",
-        "Chosen Name",
-        "Aliases",
-        "Birth Year",
-        "Birth Year Accuracy",
-        "Last Seen Date",
-        "Last Seen Date Accuracy",
-        "Last Seen Location",
-        "Last Seen Wearing",
-        "Last Seen Activity",
-        "Who to Contact If Found",
-        "Image Path",
-        "Image Path 2",
-        "Disappearance Circumstances",
-        "Eyes",
-        "Hair",
-        "Height",
-        "Identifying Features",
-        "Other Notes",
-        "Pronouns",
-        "Race",
-        "Weight",
+        field.strip()
+        for field in config_handler.maybe_get_config_entry(
+            config,
+            "profile",
+            "fields",
+            []
+        ).split(',')
     ]
 
 
-def get_cell_value_for_header(
+def get_value_for_field_by_name(
+    config,
     page,
     row_index: int,
-    header: str
+    field_name: str
 ) -> Union[str, None]:
     """
     Retrieve the value of the cell specified by row_index
@@ -81,11 +50,13 @@ def get_cell_value_for_header(
 
     Parameters
     ----------
-    page: Google Sheets Page, required
+    - config: ConfigParser, required
+        A config parser with the configuration file preloaded.
+    - page: Google Sheets Page, required
         The Google Sheets Page to look in.
-    row_index: int, required
+    - row_index: int, required
         The row in which to look.
-    header: str, required
+    - field_name: str, required
         The caption of the column in which to look.
 
     Returns
@@ -96,13 +67,13 @@ def get_cell_value_for_header(
           pretend that sheet data types exist.
     """
 
-    header_index = list_headers().index(header)
-    if not header_index:
+    field_index = get_expected_fields(config).index(field_name)
+    if not field_index:
         return None
-    cell = page.cell(row_index, header_index)
-    if not cell:
+    field = page.cell(row_index, field_index)
+    if not field:
         return None
-    return cell.value
+    return field.value
 
 
 def get_sheet(keys_file: str, sheet_id: str):
@@ -250,48 +221,6 @@ def get_column_values(page, column_index: int) -> Union[List[str], None]:
     return cells
 
 
-def create_profile(
-    page,
-    case_row_index: int
-) -> Union[dict[str, Any], None]:
-    """
-    Takes the cell values from a row, and turns them into a profile
-    for injecting into a poster.
-    """
-
-    if not page or not case_row_index:
-        return None
-    get_cells_for_row = partial(get_cell_value_for_header, page)
-    get_cell_value = partial(get_cells_for_row, case_row_index)
-    birth_year = get_cell_value("Birth Year")
-    age = None
-    if birth_year:
-        age = get_current_year() - int(birth_year)
-    return {
-        "Age": age,
-        "Birth Year": birth_year,
-        "Case ID": get_cell_value("Case ID"),
-        "Chosen Name": get_cell_value("Chosen Name"),
-        "Disappearance Circumstances": get_cell_value(
-            "Disappearance Circumstances"
-        ),
-        "Eyes": get_cell_value("Eyes"),
-        "Hair": get_cell_value("Hair"),
-        "Height": get_cell_value("Height"),
-        "Identifying Features": get_cell_value("Identifying Features"),
-        "Image 1 Path": get_cell_value("Image Path"),
-        "Image 2 Path": get_cell_value("Image Path 2"),
-        "Last Seen Date": get_cell_value("Last Seen Date"),
-        "Last Seen Location": get_cell_value("Last Seen Location"),
-        "Last Seen Wearing": get_cell_value("Last Seen Wearing"),
-        "Other Notes": get_cell_value("Other Notes"),
-        "Pronouns": get_cell_value("Pronouns"),
-        "Race": get_cell_value("Race"),
-        "Weight": get_cell_value("Weight"),
-        "Who to Contact If Found": get_cell_value("Who to Contact If Found"),
-    }
-
-
 def find_first(predicate, haystack):
     """
     Hopes to find the first item in haystack, that matches predicate.
@@ -325,99 +254,6 @@ def find_row_index(page, case_identifier):
     if not cell:
         return None
     return cell.row
-
-
-def apply_profile_to_template(profile, template_contents) -> str:
-    """
-    Substitutes known variables in the template contents
-    with values from the profile. This will fail if expected
-    variables do not exist in the template contents.
-
-    Parameters
-    ----------
-    - profile: dict, required, with fields expected but not required:
-      - Chosen Name,
-      - Age,
-      - Birth Year,
-      - Race,
-      - Height,
-      - Weight,
-      - Eyes,
-      - Hair,
-      - Pronouns,
-      - Last Seen Date,
-      - Last Seen Location,
-      - Last Seen Wearing,
-      - Identifying Features,
-      - Disappearance Circumstances,
-      - Who to Contact If Found,
-      - Image 1 Path,
-      - Image 2 Path,
-      - Other Notes
-
-    - template_contents: str, required, with these required variables:
-      - name,
-      - age,
-      - race,
-      - height,
-      - weight,
-      - eyes,
-      - hair,
-      - pronouns,
-      - last_seen_on,
-      - last_seen_where,
-      - last_seen_wearing,
-      - identifying_features,
-      - disappearance_circumstances,
-      - contact_if_found,
-      - image_path_1,
-      - image_path_2,
-      - other_notes
-
-    Returns
-    -------
-    str: The substitution result.
-    """
-
-    if not profile or not template_contents:
-        return None
-
-    try:
-        result = Template(template_contents).substitute(
-            name=profile.get("Chosen Name", ""),
-            age=profile.get("Age", ""),
-            race=profile.get("Race", ""),
-            height=profile.get("Height", ""),
-            weight=profile.get("Weight", ""),
-            eyes=profile.get("Eyes", ""),
-            hair=profile.get("Hair", ""),
-            pronouns=profile.get("Pronouns", ""),
-            last_seen_on=profile.get("Last Seen Date", ""),
-            last_seen_where=profile.get("Last Seen Location", ""),
-            last_seen_wearing=profile.get("Last Seen Wearing", ""),
-            identifying_features=profile.get("Identifying Features", ""),
-            disappearance_circumstances=profile.get(
-                "Disappearance Circumstances",
-                ""
-            ),
-            contact_if_found=profile.get("Who to Contact If Found", ""),
-            image_path_1=profile.get(
-                "Image 1 Path", "templates/transparent-1020x1024.png"
-            ),
-            image_path_2=profile.get(
-                "Image 2 Path", "templates/transparent-1020x1024.png"
-            ),
-            other_notes=profile.get("Other Notes", ""),
-        )
-        return result
-    except KeyError as err:
-        msg = (
-            "Error: failed to apply profile. "
-            "Either the placeholder was not found, "
-            f"or it was not given a substitute: {err}."
-        )
-        print(msg)
-        raise
 
 
 def get_sheet_page(config, sheet):

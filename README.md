@@ -44,6 +44,10 @@ the pipenv shell. Once inside the pipenv shell, use this
 command to run the application: 
   
 $ python3 -m lammpster 12345  
+
+or, simpler:
+
+$ ./lammpster.py 12345
   
 in which you replace the number 12345 with the identifier of
 the record in your LAMMP database.  
