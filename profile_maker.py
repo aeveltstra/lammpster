@@ -9,18 +9,89 @@
 """
 
 import datetime
+import json
+import os
+import re
 from functools import partial
 from string import Template
 from typing import Any, Union
 import db_handler_sheets
-
+import config_handler
 
 def get_current_year() -> int:
     """
-    Retrieves the year number of today's date,
-    whatever that is at the moment of execution.
+    Retrieves the year number of today's date, whatever that is at the
+    moment of execution.
     """
     return datetime.date.today().year
+
+
+def make_clean_file_name(haystack) -> str:
+    """
+    Removes all letters and symbols from the haystack,
+    that could damage a file system. Keeps only alphabet
+    letters and numerals a-z, A-Z, 0-9, and - and _.
+    """
+
+    return re.sub(r'^[-_a-zA-Z0-9]', '', haystack)
+
+
+def try_cache_profile(config, profile) -> bool:
+    """
+    Attempts to persist the passed-in profile in a local cache folder.
+    The config file will determine whether that needs to happen, and if
+    so, where.
+    """
+
+    cache_folder = config_handler.maybe_get_config_entry(
+        config,
+        "profile",
+        "cache",
+        ""
+    )
+    if not cache_folder:
+        return False
+    if not os.path.exists(cache_folder):
+        os.makedirs(cache_folder)
+    clean_file_name = make_clean_file_name(profile.get('Case ID'))
+    with open(
+            f"{cache_folder}/{clean_file_name}.json",
+            'w',
+            encoding="utf-8"
+        ) as w:
+        w.write(json.dumps(profile))
+    return True
+
+
+def try_read_cached_profile(
+    config,
+    case_id
+) -> Union[dict[str, Any], None]:
+    """
+    Attempts to read a profile that got cached previously.
+    This is used to prevent reading from an online data store
+    every time.
+    """
+
+    cache_folder = config_handler.maybe_get_config_entry(
+        config,
+        "profile",
+        "cache",
+        ""
+    )
+    if not cache_folder:
+        return None
+    clean_file_name = make_clean_file_name(case_id)
+    try:
+        with open(
+            f"{cache_folder}/{clean_file_name}.json",
+            'r',
+            encoding="utf-8"
+        ) as r:
+            return json.loads(r.read())
+    except IOError as ioE:
+        print(ioE)
+        return None
 
 
 def create(
@@ -54,7 +125,7 @@ def create(
     age = None
     if birth_year:
         age = get_current_year() - int(birth_year)
-    return {
+    profile = {
         "Age": age,
         "Birth Year": birth_year,
         "Case ID": get_cell_value("Case ID"),
@@ -77,6 +148,8 @@ def create(
         "Weight": get_cell_value("Weight"),
         "Who to Contact If Found": get_cell_value("Who to Contact If Found"),
     }
+    try_cache_profile(config, profile)
+    return profile
 
 
 def apply_profile_to_template(profile, template_contents) -> str:

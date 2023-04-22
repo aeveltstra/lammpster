@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="850" height="1100" viewBox="0 0 850 1100"
-lang="en" version="1.1" 
-xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns="http://www.w3.org/2000/svg" 
-xmlns:svg="http://www.w3.org/2000/svg" 
-xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-xmlns:cc="http://creativecommons.org/ns#" 
-xmlns:dc="http://purl.org/dc/elements/1.1/" 
-xmlns:xh="http://www.w3.org/1999/xhtml" 
+    lang="en" version="1.1" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:svg="http://www.w3.org/2000/svg" 
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+    xmlns:cc="http://creativecommons.org/ns#" 
+    xmlns:dc="http://purl.org/dc/elements/1.1/" 
+    xmlns:xh="http://www.w3.org/1999/xhtml" 
 >
 <title>Lammpster template for Instagram</title>
 <defs>
@@ -16,27 +16,35 @@ xmlns:xh="http://www.w3.org/1999/xhtml"
     <stop style="stop-color:#ecc9f3; stop-opacity:1" offset="1" />
   </linearGradient>
   <style>
+    @namespace xh url("http://www.w3.org/1999/xhtml");
+    @import url("https://fonts.googleapis.com/css?family=Archivo:400");
+    @import url("https://fonts.googleapis.com/css?family=Archivo:700");
     svg{
       stroke:#000; stroke-linecap:round; stroke-linejoin:round;
       background-color:white; stroke-width:1
     } 
-    text,xh:div,xh:p{
+    text,xh|div,xh|p{
       color:#000000; fill:#000000; font-stretch:normal; 
       font-variant:normal; font-variant-caps:normal; 
       font-variant-ligatures:normal; font-variant-numeric:normal; 
       paint-order:stroke; text-anchor:start; 
       font-family:Archivo, 'SF Pro', Verdana, Arial, sans-serif;
-      font-size:13pt; font-style:normal; font-weight:normal;
-      text-overflow:ellipsis
+      font-size:13pt; font-style:normal; font-weight:400;
+      text-overflow:ellipsis; overflow:hidden;
     }
-    xh:p{margin-top:0; padding-top:0; vertical-align:top}
+    foreignObject{margin:0}
+    xh|p{margin-top:0; padding-top:0; vertical-align:top}
     .txt_subtitle{
       font-family:Archivo, 'SF Pro', Verdana, sans-serif; 
-      font-size:32pt; font-weight:bold
+      font-size:32pt; font-weight:700; text-anchor:middle;
     }
-    .txt_title{font-family:Cambria, Georgia, 'Times New Roman', Times,
-    serif; font-size:54pt; font-weight:bold; text-align: center;}
-    .caption,.uri_info{font-weight:bold} .email_info{font-style:italic}
+    .txt_title{
+        font-family:Cambria, Georgia, 'Times New Roman', Times, serif; 
+        font-size:54pt; font-weight:700; text-anchor:middle;
+    }
+    .caption{font-weight:700}
+    .uri_info{font-weight:700; font-size:12pt}
+    .email_info{font-style:italic; font-size:12pt}
     .pane_pink_rounded{fill:#e2d5e7; fill-opacity:1; stroke:#262327; stroke-dasharray:none; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-opacity:1; stroke-width:1}
     .pane_white_rectangle{fill:#ffffff; stroke-dasharray:none; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4}
     .pane_white_rectangle_bordered{fill-opacity:1; stroke:#000000; stroke-opacity:1}
@@ -44,12 +52,12 @@ xmlns:xh="http://www.w3.org/1999/xhtml"
   </style>
   <linearGradient xlink:href="#linearGradient52678" id="linearGradient52680" 
     x1="0" y1="1000.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse" />
-  <clipPath id="clipText250x24"><rect x="0" y="0" width="250"
-    height="24"/></clipPath>
-  <clipPath id="clipText380x12"><rect x="0" y="0" width="380"
-    height="12"/></clipPath>
-  <clipPath id="clipText380x24"><rect x="0" y="0" width="380"
-    height="24"/></clipPath>
+  <clipPath id="clipText250x24" clipPathUnits="objectBoundingBox">
+    <rect x="0" y="0" width="250" height="24"/></clipPath>
+  <clipPath id="clipText380x12" clipPathUnits="objectBoundingBox">
+    <rect x="0" y="0" width="380" height="12"/></clipPath>
+  <clipPath id="clipText380x24" clipPathUnits="objectBoundingBox">
+    <rect x="0" y="0" width="380" height="24"/></clipPath>
 </defs>
 <g id="background-layer" style="display:block">
   <rect style="fill:url(#linearGradient52680); fill-opacity:1; stroke:none" id="rectangle-with-bg-gradient-white-to-purple" width="850" height="1100" x="0" y="0"><title>Background gradient,white to purple</title></rect>
@@ -65,8 +73,8 @@ xmlns:xh="http://www.w3.org/1999/xhtml"
   <image href="${image_path_1}" width="270" height="360" id="image-portrait-1" style="image-rendering:optimizeQuality" x="34.5" y="178.5" class="image_portrait"><title>Portrait 1</title></image>
 </g>
 <g id="text-layer" style="display:inline">
-  <text class="txt_title" x="34.5" y="74.5" width="770" height="100" id="text-name-caption">MISSING PERSON</text>
-  <text x="34.5" y="145.5" width="250" id="text-name-value" class="txt txt_subtitle">$name</text>
+  <text class="txt_title" x="50%" y="74.5" width="770" height="100" id="text-name-caption">MISSING PERSON</text>
+  <text x="50%" y="145.5" width="770" id="text-name-value" class="txt txt_subtitle">$name</text>
   <text x="320" y="200" width="250" id="text-age-caption" class="caption">Age:</text>
   <text x="600" y="200" width="100" id="text-race-caption" class="caption">Race:</text>
   <text x="320" y="320" width="100" id="text-height-caption" class="caption">Height:</text>
@@ -92,16 +100,18 @@ xmlns:xh="http://www.w3.org/1999/xhtml"
   <text x="430" y="230" width="250" id="text-pronouns-value">$pronouns</text>
   <text x="430" y="290" width="250" id="text-last-seen-location-value">$last_seen_where</text>
   <text x="320" y="380" width="250" id="text-last-seen-wearing-caption" class="caption">Clothing:</text>
-  <text x="430" y="380" width="380" id="text-last-seen-wearing-value">$last_seen_wearing</text>
+  <text x="430" y="380" width="380" height="12" clip-path="url(#clipText380x12)" id="text-last-seen-wearing-value">$last_seen_wearing</text>
   <text x="320" y="410" width="100" id="text-identifying-features-caption" class="caption">
   <tspan x="320" y="410">Identifying</tspan>
   <tspan x="320" y="435">features:</tspan></text>
   <text x="320" y="470" width="100" id="text-other-notes-caption" class="caption">
   <tspan x="320" y="470">Other</tspan>
   <tspan x="320" y="495">notes:</tspan></text>
-  <foreignObject x="430" y="410" width="380" height="75"
+  <foreignObject x="430" y="410" width="380" height="24"
+  clip-path="url(#clipText380x24)"
   id="text-identifying-features-value"><xh:p>$identifying_features</xh:p></foreignObject>
-  <foreignObject x="430" y="470" width="250" height="75"
+  <foreignObject x="430" y="470" width="380" height="24"
+  clip-path="url(#clipText380x24)"
   id="text-other-notes-value"><xh:p>$other_notes</xh:p></foreignObject>
   <image x="50.5" y="940.5" width="50" height="122" href="../templates/lammp-only-lantern.svg.2023_01_19_20_22.svg"/>
   <text xml:space="preserve" x="120" y="960" id="text-info-uri" class="uri_info">

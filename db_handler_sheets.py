@@ -76,7 +76,7 @@ def get_value_for_field_by_name(
     return field.value
 
 
-def get_sheet(keys_file: str, sheet_id: str):
+def get_db(keys_file: str, db_id: str):
     """
     Finds and returns a Google Sheet based on its ID and
     the credentials to access it, as specified in keys_file.
@@ -86,9 +86,9 @@ def get_sheet(keys_file: str, sheet_id: str):
     keys_file: str, required
         File path that specifies in which file the keys are
         stored, that give access to the Google Sheet that is
-        specified in sheet_id. Check the gspread docs to see
+        specified in db_id. Check the gspread docs to see
         what format it must have and how to obtain them.
-    sheet_id: str, required
+    db_id: str, required
         An identity for the Google Sheet as provided by Google.
         When you open the sheet in your web browser, its ID is
         shown as the weird code with numbers and letters in the
@@ -99,7 +99,7 @@ def get_sheet(keys_file: str, sheet_id: str):
     sheet | KeyError
         KeyError, if the gspread module was unable to retrieve a
         service account based on the provided keys file
-        or if the passed-in sheet_id does not lead to an
+        or if the passed-in db_id does not lead to an
         existing or accessible Google Sheet.
         Otherwise, the Google Sheet.
     """
@@ -115,7 +115,7 @@ def get_sheet(keys_file: str, sheet_id: str):
             f"setting points to: {keys_file}."
         )
         return KeyError(msg)
-    if not sheet_id:
+    if not db_id:
         return KeyError(
             "Please set the identity of the sheet to read in config."
         )
@@ -124,98 +124,94 @@ def get_sheet(keys_file: str, sheet_id: str):
         return KeyError(
             "Failed to create a client to talk to Google Sheets."
         )
-    maybe_sheet = client.open_by_key(sheet_id)
-    if not maybe_sheet:
+    maybe_db = client.open_by_key(db_id)
+    if not maybe_db:
         return KeyError(
             "Failed to open the requested Google Sheet."
         )
-    return maybe_sheet
+    return maybe_db
 
 
-def get_page_names(sheet) -> List[str]:
+def get_store_names(db) -> List[str]:
     """
-    Gets all names of the pages found in the sheet.
+    Gets all names of the stores found in the database.
+    For this Google Sheets handler, that is all the Page names 
+    found in the passed-in Google Sheet.
 
     Parameters
     ----------
-    - sheet: required
-        The Google Worksheet that contains the
-        pages of which the names must be returned.
+    - db: required
+        The Google Worksheet that contains the Pages of which the 
+        names must be returned.
 
     Returns
     -------
-    page names: a list of strings. May be empty.
+    names: a list of strings. May be empty.
 
     Exceptions
     ----------
-    - When no sheet was provided.
-    - When sheet is not a Google Worksheet.
-
+    - When no db was provided.
+    - When db is not a Google Sheet.
     """
 
-    pages = sheet.worksheets()
-    titles = [page.title for page in pages]
-    return titles
+    pages = db.worksheets()
+    return [page.title for page in pages]
 
 
-def get_page(sheet, page_name: str):
+def get_store(db, store_name: str):
     """
-    Finds and returns a named page in
-    a Google Worksheet.
+    Finds and returns a named store within the db. For this Google Sheets
+    handler, that is a named Page with the Google Sheets sheet.
 
     Parameters
     ----------
-    - sheet : Google Worksheet, required
-        The source that contains the page
-        to return.
-    - page_name : str, required
-        The name of the page to find in the
-        passed-in sheet.
+    - db : Google Worksheet, required
+        The source that contains the Page to return.
+    - stire_name : str, required
+        The name of the Page to find in the passed-in Sheet.
 
     Returns
     -------
     page
-        The found Google Worksheet Page.
-        May be None.
+        The found Google Worksheet Page.  May be None.
 
     Exceptions
     ----------
-    - When sheet is not a Google Worksheet.
-    - When no page was located that bears
-      the passed-in page_name.
+    - When db is not a Google Worksheet.
+    - When no Page was located that bears the passed-in store_name.
     """
 
-    return sheet.worksheet(page_name)
+    return db.worksheet(store_name)
 
 
-def get_page_column_names(page, row_index: int) -> Union[List[str], None]:
+def get_column_names(store, row_index: int) -> Union[List[str], None]:
     """
-    Finds all the column names of a spreadsheet page.
-    Column names are assumed to be the values found in the cells of the
-    row indicated by the row_index, in the order of appearance from
-    low (left) to high (right).
+    Finds all the column names of a data store. For this Google Sheets
+    handler, column names are assumed to be the values found in the 
+    cells of the row indicated by the row_index, in the order of 
+    appearance from low (left) to high (right).
     """
 
-    if not page:
+    if not store:
         return None
-    cells = page.row_values(row_index)
+    cells = store.row_values(row_index)
     if not cells:
         return None
     return cells
 
 
-def get_column_values(page, column_index: int) -> Union[List[str], None]:
+def get_column_values(store, column_index: int) -> Union[List[str], None]:
     """
     Finds the contents of all the cells in the given page, that are
     part of the column indicated by the column_index, in the order
     of appearance from low (top) to high (bottom).
     """
 
-    if not page:
+    if not store:
         return None
     if 0 == column_index:
         return None
-    cells = page.col_values(column_index)
+    cells = store.col_values(column_index)
     if not cells:
         return None
     return cells
@@ -256,47 +252,50 @@ def find_row_index(page, case_identifier):
     return cell.row
 
 
-def get_sheet_page(config, sheet):
+def get_db_store(config, db):
     """
-    Attempts to retrieve the page within the sheet, that is identified
-    by the configuration file.
+    Attempts to retrieve the data store within the db, that is 
+    identified by the configuration file. For a Google Sheets
+    handler, that is a Page within a Sheet.
 
     Parameters
     ----------
     - config: ConfigParser, required. The configuration file parser,
       with the configuration file already loaded.
+    - db: the Google Sheet returned from maybe_get_configured_db().
 
     Returns
     -------
-    Either a KeyError, or a Google Sheet page.
+    Either a KeyError, or a Google Sheets Page.
     """
 
-    page_name = config_handler.maybe_get_config_entry(
+    store_name = config_handler.maybe_get_config_entry(
         config,
         "sheet",
         "page_name"
     )
-    if not page_name:
+    if not store_name:
         msg = (
             "Aborting. Missing configuration key: "
             "'page_name'. "
             "Read the manual about setting up the configuration file."
         )
         return KeyError(msg)
-    maybe_page = get_page(sheet, page_name)
-    if not maybe_page:
+    maybe_store = get_store(db, store_name)
+    if not maybe_store:
         msg = (
-            f"Spreadsheet has no page named {page_name}. "
+            f"Google Sheet has no Page named {store_name}. "
             "Read the manual about setting up the configuration file."
         )
         return KeyError(msg)
-    return maybe_page
+    return maybe_store
 
 
-def get_configured_sheet(config):
+def maybe_get_configured_db(config):
     """
-    Attempts to connect to the spreadsheet,
-    as configured by the configuration file.
+    Attempts to connect to the database, as configured by the 
+    configuration file. For this Google Sheets handler, that is 
+    going to be a Google Sheets Sheet.
 
     Parameters
     ----------
@@ -305,10 +304,10 @@ def get_configured_sheet(config):
 
     Returns
     -------
-    Either a KeyError, or a Google Sheet sheet.
+    Either a KeyError, or a Google Sheets Sheet.
     """
 
-    sheet_id = config_handler.maybe_get_config_entry(
+    db_id = config_handler.maybe_get_config_entry(
         config,
         "sheet",
         "google_drive_sheet_id"
@@ -318,18 +317,18 @@ def get_configured_sheet(config):
         "account",
         "keys_file"
     )
-    if not sheet_id or not keys_file:
+    if not db_id or not keys_file:
         msg = (
             "Aborting. Missing 1 or more configuration keys: "
             "'google_drive_sheet_id' or 'keys_file'. "
             "Read the manual about setting up the configuration file."
         )
         return KeyError(msg)
-    maybe_sheet = get_sheet(keys_file, sheet_id)
-    if not maybe_sheet:
+    maybe_db = get_db(keys_file, db_id)
+    if not maybe_db:
         msg = (
-            "Aborting. No sheet found with identity {sheet_id}. "
+            "Aborting. No Google Sheet found with identity {db_id}. "
             "Read the manual about setting up the configuration file."
         )
         return KeyError(msg)
-    return maybe_sheet
+    return maybe_db

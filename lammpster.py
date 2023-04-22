@@ -90,8 +90,14 @@ def get_webdriver():
     Attempts to obtain a web driver based on any
     web browser installed on the system.
     """
+    desired_dpi = 2.0
     try:
-        attempt = webdriver.Chrome()
+        options = webdriver.chrome.options.Options()
+        options.add_argument('-headless')
+        options.add_argument(
+            f"--force-device-scale-factor={desired_dpi}"
+        )
+        attempt = webdriver.Chrome(options=options)
         if attempt:
             return attempt
     except Exception as _:
@@ -105,7 +111,13 @@ def get_webdriver():
             attempt = None
     if not attempt:
         try:
-            attempt = webdriver.Firefox()
+            options = webdriver.firefox.options.Options()
+            options.add_argument('-headless')
+            options.set_preference(
+                "layout.css.devPixelsPerPx",
+                str(desired_dpi)
+            )
+            attempt = webdriver.Firefox(options=options)
             if attempt:
                 return attempt
         except Exception as _:
@@ -259,8 +271,8 @@ def create_poster(
 
 def run_on_demand_functions(
     config,
-    sheet,
-    page
+    db,
+    store
 ):
     """
     Runs the functions that are requested by the command-line
@@ -270,7 +282,7 @@ def run_on_demand_functions(
 
     if must_list_sheet_page_names():
         print("All page names in the spread sheet:")
-        print(profile_maker.get_page_names(sheet))
+        print(db_handler_sheets.get_store_names(db))
         sys.exit()
 
     if must_list_sheet_column_names():
@@ -280,8 +292,8 @@ def run_on_demand_functions(
             "sheet",
             "page_column_names_row", "0"
         )
-        columns = profile_maker.get_page_column_names(
-            page,
+        columns = db_handler_sheets.get_column_names(
+            store,
             int(page_column_names_row)
         )
         print(columns)
@@ -307,7 +319,7 @@ def run_on_demand_functions(
             f"{str(column_index)} of page:"
         )
         print(msg)
-        cells = profile_maker.get_column_values(page, column_index)
+        cells = db_handler_sheets.get_column_values(store, column_index)
         print(cells)
         sys.exit()
 
@@ -333,15 +345,15 @@ def main() -> None:
         print("Retrieving configuration...")
 
     config = config_handler.read_config()
-    maybe_sheet = db_handler_sheets.get_configured_sheet(config)
-    if isinstance(maybe_sheet, KeyError):
-        sys.exit(maybe_sheet)
+    maybe_db = db_handler_sheets.maybe_get_configured_db(config)
+    if isinstance(maybe_db, KeyError):
+        sys.exit(maybe_db)
 
-    maybe_page = db_handler_sheets.get_sheet_page(config, maybe_sheet)
-    if isinstance(maybe_page, KeyError):
-        sys.exit(maybe_page)
+    db_store = db_handler_sheets.get_db_store(config, maybe_db)
+    if isinstance(db_store, KeyError):
+        sys.exit(db_store)
 
-    run_on_demand_functions(config, maybe_sheet, maybe_page)
+    run_on_demand_functions(config, maybe_db, db_store)
 
     case_id = read_case_id_from_command_line()
     if not case_id:
@@ -358,26 +370,37 @@ def main() -> None:
         sys.exit(msg)
     else:
         msg = (
-            "Lammpster will create posters for the profile based "
-            f"on row {case_id}..."
+            "Lammpster will create posters for the profile identified "
+            f"by {case_id}..."
         )
         print(msg)
 
-        case_row_index = db_handler_sheets.find_row_index(maybe_page, case_id)
-        if not case_row_index:
-            msg = (
-                f"Error: No case found with id {case_id}. Use the "
-                "command-line switch --list-column-values to find "
-                "existing case identifiers."
-            )
-            sys.exit(msg)
-
-        print(f"Found case with id {case_id}. Creating profile...")
-        profile = profile_maker.create(
+        profile = profile_maker.try_read_cached_profile(
             config,
-            maybe_page,
-            case_row_index
+            case_id
         )
+        if profile:
+            print("Found profile in cache.")
+        else:
+            print("Found no cache for this profile. Reaching out...")
+            case_row_index = db_handler_sheets.find_row_index(
+                db_store,
+                case_id
+            )
+            if not case_row_index:
+                msg = (
+                    f"Error: No case found with id {case_id}. Use the "
+                    "command-line switch --list-column-values to find "
+                    "existing case identifiers."
+                )
+                sys.exit(msg)
+
+            print(f"Found case with id {case_id}. Creating profile...")
+            profile = profile_maker.create(
+                config,
+                db_store,
+                case_row_index
+            )
 
         output_folder = config_handler.maybe_get_config_entry(
             config,
@@ -402,7 +425,6 @@ def main() -> None:
                "Error: missing posters configuration. Check the manual."
             )
 
-        print("Profile created.")
         print("Generating and saving posters....")
         for channel, template in poster_choices.items():
             create_poster(
@@ -414,7 +436,7 @@ def main() -> None:
                 output_file_prefix
             )
 
-        print("Done. Check the folder for new posters.")
+        print(f"Done. Check the folder '{output_folder}' for new posters.")
         sys.exit()
 
 

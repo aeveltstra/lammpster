@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="816" height="1056" viewBox="0 0 816 1056" lang="en" version="1.1"  
-xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns="http://www.w3.org/2000/svg" 
-xmlns:svg="http://www.w3.org/2000/svg" 
-xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-xmlns:cc="http://creativecommons.org/ns#" 
-xmlns:dc="http://purl.org/dc/elements/1.1/" 
-xmlns:xh="http://www.w3.org/1999/xhtml"
+<svg width="816" height="1056" viewBox="0 0 816 1056" 
+    lang="en" version="1.1"  
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:svg="http://www.w3.org/2000/svg" 
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+    xmlns:cc="http://creativecommons.org/ns#" 
+    xmlns:dc="http://purl.org/dc/elements/1.1/" 
+    xmlns:xh="http://www.w3.org/1999/xhtml"
 >
 <title>Lammpster template for Print, Letter</title>
 <defs id="defs11">
@@ -15,32 +16,38 @@ xmlns:xh="http://www.w3.org/1999/xhtml"
     <stop style="stop-color:#ecc9f3; stop-opacity:1" offset="1" />
   </linearGradient>
   <style>
+    @namespace xh url("http://www.w3.org/1999/xhtml");
+    @import url("https://fonts.googleapis.com/css?family=Archivo:400");
+    @import url("https://fonts.googleapis.com/css?family=Archivo:700");
     svg{
       stroke:#000; stroke-linecap:round; stroke-linejoin:round; 
       stroke-width:1; background-color:white; width:8.5in; height:11in
     }
-    xh:p{margin-top:0; padding-top:0; vertical-align:top}
-    text,xh:div,xh:p{
+    text,xh|div,xh|p{
       color:#000000; fill:#000000; font-stretch:normal;
       font-variant:normal; font-variant-caps:normal;
       font-variant-east-asian:normal; font-variant-ligatures:normal;
       font-variant-numeric:normal; paint-order:stroke; text-anchor:start;
       font-family:Archivo, 'SF Pro', Verdana, sans-serif; font-size:13pt;
-      font-style:normal; stroke-width:1; text-overflow:ellispsis
+      font-style:normal; font-weight:400; stroke-width:1;
+      text-overflow:ellipsis; overflow:hidden;
     }
+    foreignObject{padding:0}
+    xh|p{margin-top:0; padding-top:0; vertical-align:top}
     .txt_subtitle{
       font-family:Archivo, 'SF Pro', Verdana, sans-serif; 
-      font-size:32pt; font-weight:bold
+      font-size:32pt; font-weight:700; text-anchor:middle;
     }
     .txt_title{
       font-family:Cambria, Georgia, 'Times New Roman', Times, serif; 
-      font-size:48pt; font-weight:bold; text-align:center;
+      font-size:48pt; font-weight:700; text-anchor:middle;
     }
-    .uri_info{font-weight:bold; font-size:12pt}
+    .uri_info{font-weight:700; font-size:12pt}
     .email_info{font-size:12pt; font-style:italic}
-    .caption{font-weight:bolder}
+    .caption{font-weight:700}
     .pane_pink_rounded{
-      fill:#e2d5e7; fill-opacity:1; stroke:#262327; stroke-dasharray:none; 
+      fill:#e2d5e7; fill-opacity:1; stroke:#262327; 
+      stroke-dasharray:none; 
       stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; 
       stroke-opacity:1; stroke-width:1
     }
@@ -51,12 +58,12 @@ xmlns:xh="http://www.w3.org/1999/xhtml"
   <linearGradient xlink:href="#linearGradient52678" id="linearGradient52680"
     x1="47.5" x2="47.5" y1="1060" y2="47.5" gradientUnits="userSpaceOnUse"
     gradientTransform="matrix(0.84877293,0,0,0.87291891,47.358857,47.667565)"/>
-  <clipPath id="clipText250x24"><rect x="0" y="0" width="250"
-    height="24"/></clipPath>
-  <clipPath id="clipText300x12"><rect x="0" y="0" width="300"
-    height="12"/></clipPath>
-  <clipPath id="clipText300x24"><rect x="0" y="0" width="300"
-    height="24"/></clipPath>
+  <clipPath id="clipText250x24" clipPathUnits="objectBoundingBox">
+    <rect x="0" y="0" width="250" height="24"/></clipPath>
+  <clipPath id="clipText300x12" clipPathUnits="objectBoundingBox">
+    <rect x="0" y="0" width="300" height="12"/></clipPath>
+  <clipPath id="clipText300x24" clipPathUnits="objectBoundingBox">
+    <rect x="0" y="0" width="300" height="24"/></clipPath>
 </defs>
 
 <g id="background-layer" style="display:block">
@@ -79,15 +86,15 @@ xmlns:xh="http://www.w3.org/1999/xhtml"
 </g>
 
 <g id="text-layer" style="display:block">
-  <text class="txt_title" x="92.5" y="135.5" width="630" height="100" id="text-name-caption">MISSING PERSON</text>
-  <text x="92.5" y="206.5" width="701.5" id="text-name-value" class="txt_subtitle">$name</text>
+  <text class="txt_title" x="50%" y="135.5" width="645" height="100" id="text-name-caption">MISSING PERSON</text>
+  <text x="50%" y="206.5" width="645" id="text-name-value" class="txt_subtitle">$name</text>
   <text class="caption" x="335.5" y="277.5" width="100" id="text-age-caption">Age:</text>
   <text class="caption" x="573.5" y="277.5" width="100" id="text-race-caption">Race:</text>
   <text class="caption" x="335.5" y="379.5" width="100" id="text-height-caption">Height:</text>
   <text x="640.5" y="379.5" width="250" id="text-weight-value">$weight</text>
   <text class="caption" x="335.5" y="405.5" width="100" id="text-eyes-caption">Eyes:</text>
   <text class="caption" x="573.5" y="405.5" width="100" id="text-hair-caption">Hair:</text>
-  <text class="caption" x="509.5" y="550.5" width="100" id="text-contact-caption">If seen/located, contact:</text>
+  <text class="caption" x="509.5" y="550.5" width="250" id="text-contact-caption">If seen/located, contact:</text>
   <foreignObject x="509.5" y="545.5" width="205" height="105" id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
   <text class="caption" x="157.5" y="566.5" width="100" id="text-disappearance-caption">Circumstances of disappearance:</text>
   <foreignObject x="108.5" y="579.5" width="250" height="400"
