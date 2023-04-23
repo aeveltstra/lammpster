@@ -9,7 +9,7 @@
     xmlns:dc="http://purl.org/dc/elements/1.1/" 
     xmlns:xh="http://www.w3.org/1999/xhtml"
 >
-<title>Lammpster template for Print, Letter</title>
+<title>Lammpster case $case_id, $name for Print, Letter</title>
 <defs id="defs11">
   <linearGradient id="linearGradient52678">
     <stop style="stop-color:#4b0287; stop-opacity:1" offset="0" />
@@ -56,18 +56,17 @@
     .image_portrait{fill:#fffff1; fill-opacity:1; stroke:#000000; stroke-dasharray:none; stroke-miterlimit:4; stroke-opacity:1; stroke-width:1}
   </style>
   <linearGradient xlink:href="#linearGradient52678" id="linearGradient52680"
-    x1="47.5" x2="47.5" y1="1060" y2="47.5" gradientUnits="userSpaceOnUse"
-    gradientTransform="matrix(0.84877293,0,0,0.87291891,47.358857,47.667565)"/>
-  <clipPath id="clipText250x24" clipPathUnits="objectBoundingBox">
-    <rect x="0" y="0" width="250" height="24"/></clipPath>
-  <clipPath id="clipText300x12" clipPathUnits="objectBoundingBox">
-    <rect x="0" y="0" width="300" height="12"/></clipPath>
-  <clipPath id="clipText300x24" clipPathUnits="objectBoundingBox">
-    <rect x="0" y="0" width="300" height="24"/></clipPath>
+    x1="47.5" x2="47.5" y1="1060" y2="47.5" gradientUnits="userSpaceOnUse" />
+  <clipPath id="clipTextClothing" clipPathUnits="userSpaceOnUse">
+    <rect x="428.5" y="417.5" width="300" height="24"/></clipPath>
+  <clipPath id="clipTextFeatures" clipPathUnits="userSpaceOnUse">
+    <rect x="428.5" y="443.5" width="300" height="24"/></clipPath>
+  <clipPath id="clipTextNotes" clipPathUnits="userSpaceOnUse">
+    <rect x="428.5" y="463.5" width="300" height="48"/></clipPath>
 </defs>
 
 <g id="background-layer" style="display:block">
-  <rect style="fill:url(#linearGradient52680); fill-opacity:1; stroke:none; " 
+  <rect style="fill:url(#linearGradient52680); fill-opacity:1; stroke:none;" 
   id="rectangle-with-bg-gradient-white-to-purple" width="720" height="1060"
   x="47.5" y="47.5"><title>Background gradient, white to purple</title></rect>
   <rect style="stroke:#ffffff; " id="pane-body" width="672" height="795"
@@ -88,7 +87,8 @@
 <g id="text-layer" style="display:block">
   <text class="txt_title" x="50%" y="135.5" width="645" height="100" id="text-name-caption">MISSING PERSON</text>
   <text x="50%" y="206.5" width="645" id="text-name-value" class="txt_subtitle">$name</text>
-  <text class="caption" x="335.5" y="277.5" width="100" id="text-age-caption">Age:</text>
+  <text class="caption" x="335.5" y="277.5" width="100"
+  id="text-age-caption">Born in:</text>
   <text class="caption" x="573.5" y="277.5" width="100" id="text-race-caption">Race:</text>
   <text class="caption" x="335.5" y="379.5" width="100" id="text-height-caption">Height:</text>
   <text x="640.5" y="379.5" width="250" id="text-weight-value">$weight</text>
@@ -98,11 +98,11 @@
   <foreignObject x="509.5" y="545.5" width="205" height="105" id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
   <text class="caption" x="157.5" y="566.5" width="100" id="text-disappearance-caption">Circumstances of disappearance:</text>
   <foreignObject x="108.5" y="579.5" width="250" height="400"
-  id="text-disappearance-value"><xh:p>$disappearance_circumstances</xh:p></foreignObject>
+  id="text-disappearance-value"><xh:p>${disappearance_circumstances}</xh:p></foreignObject>
   <text class="caption" x="335.5" y="328.5" width="100" id="text-last-seen-date-caption">Last seen:</text>
   <text class="caption" x="335.5" y="303.5" width="100" id="text-pronouns-caption">Pronouns:</text>
   <text class="caption" x="335.5" y="354.5" width="100" id="text-last-seen-location-caption">Where:</text>
-  <text x="428.5" y="277.5" width="200" id="text-age-value">$age</text>
+  <text x="428.5" y="277.5" width="200" id="text-age-value">$born</text>
   <text x="640.5" y="277.5" width="200" id="text-race-value">$race</text>
   <text x="428.5" y="379.5" width="200" id="text-height-value">$height</text>
   <text class="caption" x="573.5" y="379.5" width="100" id="text-weight-caption">Weight:</text>
@@ -111,13 +111,13 @@
   <text x="428.5" y="328.5" width="200" id="text-last-seen-date-value">$last_seen_on</text>
   <text x="428.5" y="303.5" width="200" id="text-pronouns-value">$pronouns</text>
   <text x="428.5" y="354.5" width="200" id="text-last-seen-location-value">$last_seen_where</text>
-  <text class="caption" x="335.5" y="430.5" width="100" height="12" id="text-last-seen-wearing-caption">Clothing:</text>
-  <text x="428.5" y="430.5" width="300" height="12" clip-path="url(#clipText300x12)" id="text-last-seen-wearing-value">$last_seen_wearing</text>
-  <text class="caption" x="335.5" y="455.5" width="100" height="12" id="text-identifying-features-caption">Features:</text>
-  <text x="428.5" y="455.5" width="300" height="24" clip-path="url(#clipText300x24)" id="text-identifying-features-value">$identifying_features</text>
+  <text class="caption" x="335.5" y="430.5" width="100" id="text-last-seen-wearing-caption">Clothing:</text>
+  <text x="428.5" y="430.5" width="300" clip-path="url(#clipTextClothing)" id="text-last-seen-wearing-value">$last_seen_wearing</text>
+  <text class="caption" x="335.5" y="455.5" width="100" id="text-identifying-features-caption">Features:</text>
+  <text x="428.5" y="455.5" width="300" clip-path="url(#clipTextFeatures)" id="text-identifying-features-value">$identifying_features</text>
   <text class="caption" x="335.5" y="480.5" width="100" id="text-other-notes-caption">Notes:</text>
-  <foreignObject x="428.5" y="480.5" width="300" height="24"
-    clip-path="url(#clipText300x24)" id="text-other-notes-value"><xh:p>$other_notes</xh:p></foreignObject>
+  <foreignObject x="428.5" y="463.5" width="300" height="48"
+    clip-path="url(#clipTextNotes)" id="text-other-notes-value"><xh:p>$other_notes</xh:p></foreignObject>
   <image x="105.5" y="849.5" height="98" width="38" href="../templates/lammp-only-lantern.svg.2023_01_19_20_22.svg" />
   <text xml:space="preserve" x="149.5" y="862.5" id="text-info-uri" class="uri_info">
   <tspan class="caption" x="149.5" y="862.5">For More Information:</tspan>

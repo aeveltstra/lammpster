@@ -12,15 +12,17 @@
 import os
 import sys
 from io import BytesIO
+from typing import Union
 from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import config_handler
 import db_handler_sheets
 import profile_maker
+import unit_tester
 
 
-def read_case_id_from_command_line():
+def read_case_id_from_command_line() -> Union[str, None]:
     """
     Reads the case id from the command line. Assumes that the 1st
     command-line argument is the case identifier, to be used to
@@ -32,7 +34,7 @@ def read_case_id_from_command_line():
     return None
 
 
-def must_list_sheet_column_names():
+def must_list_sheet_column_names() -> bool:
     """
     Returns true, if the command-line argument --list-column-names
     was added to the run invocation.
@@ -41,7 +43,7 @@ def must_list_sheet_column_names():
     return "--list-column-names" in sys.argv
 
 
-def must_list_sheet_page_names():
+def must_list_sheet_page_names() -> bool:
     """
     Returns true, if the command-line argument --list-sheet-pages
     was added to the run invocation.
@@ -50,7 +52,7 @@ def must_list_sheet_page_names():
     return "--list-sheet-pages" in sys.argv
 
 
-def must_list_column_values():
+def must_list_column_values() -> bool:
     """
     Returns true, if the command-line argument --list-column-values
     was added to the run invocation.
@@ -59,7 +61,7 @@ def must_list_column_values():
     return "--list-column-values" in sys.argv
 
 
-def list_values_for_which_column():
+def list_values_for_which_column() -> Union[int, None]:
     """
     Returns the index number of the column that needs to have its
     values listed. This comes from the command-line invocation,
@@ -83,6 +85,16 @@ def list_values_for_which_column():
             )
             sys.exit(msg)
     return None
+
+
+def must_run_unit_tests() -> bool:
+    """
+    Returns true, if the command-line argument --unit-test
+    was added to the run invocation.
+    """
+
+    return "--unit-test" in sys.argv
+
 
 
 def get_webdriver():
@@ -200,24 +212,25 @@ def create_poster(
     """
     Creates the poster. Writes the result out to the specified output
     folder. The file name will start with the file prefix, followed by
-    the case id, the string literal '-poster-', the channel, and eah
+    the case id, the string literal '-poster-', the channel, and each
     of the string literals '.svg', '.pdf', and '.png'.
 
     Parameters
     ----------
     - config: ConfigParser, required.
         Should be a config parser with the configuration preloaded.
-    - profile: dict, required. Should come from the function
-      create_profile().
-    - channel: str, required. The name of a known channel. Will be used
-      to name the output file. Channels are identified in the
-      configuration file.
-    - template_path: str, required. The file location of the template
-      to be converted into a poster.
-    - output_folder: str, required. The folder to which new posters
-      need to get written.
-    - file_prefix: str, optional. Will be used in naming the poster
-      files that get written, as the first part of the file name.
+    - profile: dict, required.
+        Should come from the function create_profile().
+    - channel: str, required.
+        The name of a known channel. Will be used to name the output 
+        file. Channels are identified in the configuration file.
+    - template_path: str, required.
+        The file location of the template to be converted into a poster.
+    - output_folder: str, required.
+        The folder to which new posters need to get written.
+    - file_prefix: str, optional.
+        Will be used in naming the poster files that get written, 
+        as the first part of the file name.
 
     Returns
     -------
@@ -233,7 +246,7 @@ def create_poster(
     ):
         return None
     prefix = output_folder + file_prefix
-    case_id = profile.get("Case ID")
+    case_id = profile.get("case_id")
 
     print(f"Creating poster for case {case_id}, for channel {channel}...")
 
@@ -242,6 +255,7 @@ def create_poster(
         with open(template_path, "r", encoding="utf-8") as template:
             svg_poster = profile_maker.apply_profile_to_template(
                              profile,
+                             template_path,
                              template.read()
                          )
     except FileNotFoundError:
@@ -273,17 +287,23 @@ def run_on_demand_functions(
     config,
     db,
     store
-):
+) -> bool:
     """
     Runs the functions that are requested by the command-line
     arguments during the run invocation. See the readme file for
     documentation of the command-line switches.
+
+    Returns
+    -------
+    bool: whether on-demand functions got run or not.
     """
+
+    ran = False
 
     if must_list_sheet_page_names():
         print("All page names in the spread sheet:")
         print(db_handler_sheets.get_store_names(db))
-        sys.exit()
+        ran = True
 
     if must_list_sheet_column_names():
         print("All column names in page:")
@@ -297,7 +317,7 @@ def run_on_demand_functions(
             int(page_column_names_row)
         )
         print(columns)
-        sys.exit()
+        ran = True
 
     if must_list_column_values():
         column_index = list_values_for_which_column()
@@ -321,7 +341,14 @@ def run_on_demand_functions(
         print(msg)
         cells = db_handler_sheets.get_column_values(store, column_index)
         print(cells)
-        sys.exit()
+        ran = True
+
+    if must_run_unit_tests():
+        print("Running unit tests...")
+        unit_tester.test(config)
+        ran = True
+
+    return ran
 
 
 def main() -> None:
@@ -353,7 +380,8 @@ def main() -> None:
     if isinstance(db_store, KeyError):
         sys.exit(db_store)
 
-    run_on_demand_functions(config, maybe_db, db_store)
+    if run_on_demand_functions(config, maybe_db, db_store):
+        sys.exit()
 
     case_id = read_case_id_from_command_line()
     if not case_id:
@@ -437,7 +465,7 @@ def main() -> None:
             )
 
         print(f"Done. Check the folder '{output_folder}' for new posters.")
-        sys.exit()
+        return None
 
 
 # Normally, python will execute any script statements not

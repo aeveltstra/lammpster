@@ -18,6 +18,7 @@ from typing import Any, Union
 import db_handler_sheets
 import config_handler
 
+
 def get_current_year() -> int:
     """
     Retrieves the year number of today's date, whatever that is at the
@@ -33,7 +34,9 @@ def make_clean_file_name(haystack) -> str:
     letters and numerals a-z, A-Z, 0-9, and - and _.
     """
 
-    return re.sub(r'^[-_a-zA-Z0-9]', '', haystack)
+    if not haystack:
+        return ""
+    return re.sub("[^-_a-zA-Z0-9]*", "", haystack)
 
 
 def try_cache_profile(config, profile) -> bool:
@@ -53,7 +56,7 @@ def try_cache_profile(config, profile) -> bool:
         return False
     if not os.path.exists(cache_folder):
         os.makedirs(cache_folder)
-    clean_file_name = make_clean_file_name(profile.get('Case ID'))
+    clean_file_name = make_clean_file_name(profile.get('case_id'))
     with open(
             f"{cache_folder}/{clean_file_name}.json",
             'w',
@@ -101,7 +104,9 @@ def create(
 ) -> Union[dict[str, Any], None]:
     """
     Takes the cell values from a row, and turns them into a profile
-    for injecting into a poster.
+    for injecting into a poster. The input fields from the store and
+    the output fields for the profile are read from the config.
+    If possible, this method also attempts to cache the profile.
 
     Parameters
     ----------
@@ -111,6 +116,13 @@ def create(
     - case_row_id: int, required
         Should be the number of that record in the store,
         that identifies of which to create a profile.
+        You can find this from db_handler_sheets.find_row_index().
+        The header row is 1.
+
+    Side Effects
+    ------------
+    An attempt will be made to cache a successfully read profile.
+    See try_cache_profile().
     """
 
     if not store or not case_row_index:
@@ -121,38 +133,24 @@ def create(
     )
     get_rows_for_store = partial(get_stores_for_config, store)
     get_cell_value = partial(get_rows_for_store, case_row_index)
-    birth_year = get_cell_value("Birth Year")
-    age = None
-    if birth_year:
-        age = get_current_year() - int(birth_year)
-    profile = {
-        "Age": age,
-        "Birth Year": birth_year,
-        "Case ID": get_cell_value("Case ID"),
-        "Chosen Name": get_cell_value("Chosen Name"),
-        "Disappearance Circumstances": get_cell_value(
-            "Disappearance Circumstances"
-        ),
-        "Eyes": get_cell_value("Eyes"),
-        "Hair": get_cell_value("Hair"),
-        "Height": get_cell_value("Height"),
-        "Identifying Features": get_cell_value("Identifying Features"),
-        "Image 1 Path": get_cell_value("Image Path"),
-        "Image 2 Path": get_cell_value("Image Path 2"),
-        "Last Seen Date": get_cell_value("Last Seen Date"),
-        "Last Seen Location": get_cell_value("Last Seen Location"),
-        "Last Seen Wearing": get_cell_value("Last Seen Wearing"),
-        "Other Notes": get_cell_value("Other Notes"),
-        "Pronouns": get_cell_value("Pronouns"),
-        "Race": get_cell_value("Race"),
-        "Weight": get_cell_value("Weight"),
-        "Who to Contact If Found": get_cell_value("Who to Contact If Found"),
-    }
+    profile_mapping = config_handler.maybe_get_config_section_items(
+        config,
+        "profile_map",
+        {}
+    )
+    profile = {}
+    for a, b in profile_mapping.items():
+        profile[a] = get_cell_value(b)
+
     try_cache_profile(config, profile)
     return profile
 
 
-def apply_profile_to_template(profile, template_contents) -> str:
+def apply_profile_to_template(
+    profile, 
+    template_name, 
+    template_contents
+) -> str:
     """
     Substitutes known variables in the template contents
     with values from the profile. This will fail if expected
@@ -160,44 +158,15 @@ def apply_profile_to_template(profile, template_contents) -> str:
 
     Parameters
     ----------
-    - profile: dict, required, with fields expected but not required:
-      - Chosen Name,
-      - Age,
-      - Birth Year,
-      - Race,
-      - Height,
-      - Weight,
-      - Eyes,
-      - Hair,
-      - Pronouns,
-      - Last Seen Date,
-      - Last Seen Location,
-      - Last Seen Wearing,
-      - Identifying Features,
-      - Disappearance Circumstances,
-      - Who to Contact If Found,
-      - Image 1 Path,
-      - Image 2 Path,
-      - Other Notes
-
-    - template_contents: str, required, with these required variables:
-      - name,
-      - age,
-      - race,
-      - height,
-      - weight,
-      - eyes,
-      - hair,
-      - pronouns,
-      - last_seen_on,
-      - last_seen_where,
-      - last_seen_wearing,
-      - identifying_features,
-      - disappearance_circumstances,
-      - contact_if_found,
-      - image_path_1,
-      - image_path_2,
-      - other_notes
+    - profile: dict, required
+        Should be the result of create()
+    - template_name: str, required
+        Should be the name of the file that contains the 
+        contents speficified in the template_contents argument.
+        Used in error logging.
+    - template_contents: str, required
+        Variables in the template should be defined in the config,
+        in the section profile_map.
 
     Returns
     -------
@@ -208,36 +177,11 @@ def apply_profile_to_template(profile, template_contents) -> str:
         return None
 
     try:
-        result = Template(template_contents).substitute(
-            name=profile.get("Chosen Name", ""),
-            age=profile.get("Age", ""),
-            race=profile.get("Race", ""),
-            height=profile.get("Height", ""),
-            weight=profile.get("Weight", ""),
-            eyes=profile.get("Eyes", ""),
-            hair=profile.get("Hair", ""),
-            pronouns=profile.get("Pronouns", ""),
-            last_seen_on=profile.get("Last Seen Date", ""),
-            last_seen_where=profile.get("Last Seen Location", ""),
-            last_seen_wearing=profile.get("Last Seen Wearing", ""),
-            identifying_features=profile.get("Identifying Features", ""),
-            disappearance_circumstances=profile.get(
-                "Disappearance Circumstances",
-                ""
-            ),
-            contact_if_found=profile.get("Who to Contact If Found", ""),
-            image_path_1=profile.get(
-                "Image 1 Path", "templates/transparent-1020x1024.png"
-            ),
-            image_path_2=profile.get(
-                "Image 2 Path", "templates/transparent-1020x1024.png"
-            ),
-            other_notes=profile.get("Other Notes", ""),
-        )
-        return result
+        return Template(template_contents).substitute(profile)
     except KeyError as err:
         msg = (
-            "Error: failed to apply profile. "
+            "Error: failed to apply the profile to the "
+            f"template in file {template_name}. "
             "Either the placeholder was not found, "
             f"or it was not given a substitute: {err}."
         )

@@ -40,7 +40,7 @@ def get_expected_fields(config) -> List[str]:
 
 def get_value_for_field_by_name(
     config,
-    page,
+    page: gspread.worksheet.Worksheet,
     row_index: int,
     field_name: str
 ) -> Union[str, None]:
@@ -76,19 +76,22 @@ def get_value_for_field_by_name(
     return field.value
 
 
-def get_db(keys_file: str, db_id: str):
+def get_db(
+    keys_file: str,
+    db_id: str
+) -> gspread.spreadsheet.Spreadsheet:
     """
     Finds and returns a Google Sheet based on its ID and
     the credentials to access it, as specified in keys_file.
 
     Parameters
     ----------
-    keys_file: str, required
+    - keys_file: str, required
         File path that specifies in which file the keys are
         stored, that give access to the Google Sheet that is
         specified in db_id. Check the gspread docs to see
         what format it must have and how to obtain them.
-    db_id: str, required
+    - db_id: str, required
         An identity for the Google Sheet as provided by Google.
         When you open the sheet in your web browser, its ID is
         shown as the weird code with numbers and letters in the
@@ -158,7 +161,7 @@ def get_store_names(db) -> List[str]:
     return [page.title for page in pages]
 
 
-def get_store(db, store_name: str):
+def get_store(db, store_name: str) -> gspread.worksheet.Worksheet:
     """
     Finds and returns a named store within the db. For this Google Sheets
     handler, that is a named Page with the Google Sheets sheet.
@@ -167,7 +170,7 @@ def get_store(db, store_name: str):
     ----------
     - db : Google Worksheet, required
         The source that contains the Page to return.
-    - stire_name : str, required
+    - store_name : str, required
         The name of the Page to find in the passed-in Sheet.
 
     Returns

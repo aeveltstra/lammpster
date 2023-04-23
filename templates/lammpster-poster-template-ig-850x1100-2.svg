@@ -9,7 +9,7 @@
     xmlns:dc="http://purl.org/dc/elements/1.1/" 
     xmlns:xh="http://www.w3.org/1999/xhtml" 
 >
-<title>Lammpster template for Instagram</title>
+<title>Lammpster case $case_id, $name for Instagram</title>
 <defs>
   <linearGradient id="linearGradient52678">
     <stop style="stop-color:#4b0287; stop-opacity:1" offset="0" />
@@ -75,7 +75,8 @@
 <g id="text-layer" style="display:inline">
   <text class="txt_title" x="50%" y="74.5" width="770" height="100" id="text-name-caption">MISSING PERSON</text>
   <text x="50%" y="145.5" width="770" id="text-name-value" class="txt txt_subtitle">$name</text>
-  <text x="320" y="200" width="250" id="text-age-caption" class="caption">Age:</text>
+  <text x="320" y="200" width="250" id="text-age-caption"
+  class="caption">Born in:</text>
   <text x="600" y="200" width="100" id="text-race-caption" class="caption">Race:</text>
   <text x="320" y="320" width="100" id="text-height-caption" class="caption">Height:</text>
   <text x="680" y="320" width="250" id="text-weight-value">$weight</text>
@@ -86,11 +87,11 @@
   id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
   <text x="138.5" y="589.5" width="250" id="text-disappearance-caption" class="caption">Circumstances of disappearance:</text>
   <foreignObject x="42.5" y="600" width="480" height="300" 
-  id="text-disappearance-value"><xh:p>$disappearance_circumstances</xh:p></foreignObject>
+  id="text-disappearance-value"><xh:p>${disappearance_circumstances}</xh:p></foreignObject>
   <text x="320" y="260" width="250" id="text-last-seen-date-caption" class="caption">Last seen:</text>
   <text x="320" y="230" width="100" id="text-pronouns-caption" class="caption">Pronouns:</text>
   <text x="320" y="290" width="100" id="text-last-seen-location-caption" class="caption">Where:</text>
-  <text x="430" y="200" width="250" id="text-age-value">$age</text>
+  <text x="430" y="200" width="250" id="text-age-value">$born</text>
   <text x="680" y="200" width="250" id="text-race-value">$race</text>
   <text x="430" y="320" width="250" id="text-height-value">$height</text>
   <text x="600" y="320" width="250" id="text-weight-caption" class="caption">Weight:</text>
