@@ -99,6 +99,9 @@ Additional options:
 - --list-column-names will list the column names of the specified page in the spread sheet. This is used to configure the mapping of the spread sheet columns to the posters. It looks at the [sheet] section in the config file to determine which row contains the sheet column names. Invoke this without providing other switches or options, like so: $ python3 -m lammpster --list-column-names  
 - --list-sheet-pages will list the page names in the spread sheet. Use this to explore a spread sheet of which the owner forgot to specify which page to query. By default, the page of interest is named sheet1, but owners have the option of renaming sheets. Invoke this without providing other switches or options, like so: $ python3 -m lammpster --list-sheet-pages  
 - --list-column-values x will list all values in column x in the specified page in the spread sheet. Use this to find a record identifiers, for instance. Provide the index of the column to list. Usually that is column 1. Invoke this without providing other switches or options, like so: $ python3 -m lammpster --list-column-values 1
+- --unit-test will perform unit tests. A python script named
+  'unit_tester.py' is available, that gets called. You can call it by itself
+  as well, like so: $ python3 -m unit_tester
 
   
 For added support and feedback, contact OmegaJunior Consultancy 

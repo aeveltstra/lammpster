@@ -93,7 +93,11 @@ def test_can_apply_profile_to_template():
         "three": "Drei"
     }
     template = "The road goes $one, $two, $three."
-    output = profile_maker.apply_profile_to_template(profile, template)
+    output = profile_maker.apply_profile_to_template(
+        profile,
+        "unit test template",
+        template
+    )
     return (output == "The road goes Einz, Zwo, Drei.")
 
 
@@ -137,3 +141,7 @@ def test(config):
         )
         print(msg)
 
+if __name__ == "__main__":
+    print("Running unit tests. Please stand by...")
+    config = config_handler.read_config()
+    test(config)
