@@ -23,14 +23,21 @@
       stroke:#000; stroke-linecap:round; stroke-linejoin:round; 
       stroke-width:1; background-color:white; width:8.5in; height:11in
     }
-    text,xh|div,xh|p{
-      color:#000000; fill:#000000; font-stretch:normal;
-      font-variant:normal; font-variant-caps:normal;
-      font-variant-east-asian:normal; font-variant-ligatures:normal;
+    text{
+      color:#000000; fill:#000000; 
       font-variant-numeric:normal; paint-order:stroke; text-anchor:start;
       font-family:Archivo, 'SF Pro', Verdana, sans-serif; font-size:13pt;
       font-style:normal; font-weight:400; stroke-width:1;
       text-overflow:ellipsis; overflow:hidden;
+    }
+    xh|div,xh|p{
+      color:#000000; 
+      font-family:Archivo, 'SF Pro', Verdana, sans-serif;
+      font-size:13pt;
+      font-style:normal;
+      font-weight:400;
+      text-overflow:ellipsis;
+      overflow:hidden;
     }
     foreignObject{padding:0}
     xh|p{margin-top:0; padding-top:0; vertical-align:top}
@@ -95,7 +102,7 @@
   <text class="caption" x="335.5" y="405.5" width="100" id="text-eyes-caption">Eyes:</text>
   <text class="caption" x="573.5" y="405.5" width="100" id="text-hair-caption">Hair:</text>
   <text class="caption" x="509.5" y="550.5" width="250" id="text-contact-caption">If seen/located, contact:</text>
-  <foreignObject x="509.5" y="545.5" width="205" height="105" id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
+  <foreignObject x="509.5" y="565.5" width="205" height="105" id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
   <text class="caption" x="157.5" y="566.5" width="100" id="text-disappearance-caption">Circumstances of disappearance:</text>
   <foreignObject x="108.5" y="579.5" width="250" height="400"
   id="text-disappearance-value"><xh:p>${disappearance_circumstances}</xh:p></foreignObject>

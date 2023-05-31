@@ -2,4 +2,5 @@
 **/.*.swo
 **/.*.swp
 **/output/
-
+geckodriver.log
+**/cached_profiles/

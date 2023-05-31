@@ -17,23 +17,25 @@
   </linearGradient>
   <style>
     @namespace xh url("http://www.w3.org/1999/xhtml");
-    @import url("https://fonts.googleapis.com/css?family=Archivo:400");
+    @import url("https://fonts.googleapis.com/css?family=Archivo:300");
     @import url("https://fonts.googleapis.com/css?family=Archivo:700");
     svg{
-      stroke:#000; stroke-linecap:round; stroke-linejoin:round;
+      stroke-linecap:round; stroke-linejoin:round;
       background-color:white; stroke-width:1
     } 
-    text,xh|div,xh|p{
+    text,xh|div,xh|p,xh|th,xh|td{
       color:#000000; fill:#000000; font-stretch:normal; 
       font-variant:normal; font-variant-caps:normal; 
       font-variant-ligatures:normal; font-variant-numeric:normal; 
       paint-order:stroke; text-anchor:start; 
       font-family:Archivo, 'SF Pro', Verdana, Arial, sans-serif;
-      font-size:13pt; font-style:normal; font-weight:400;
+      font-size:13pt; font-style:normal; font-weight:300;
       text-overflow:ellipsis; overflow:hidden;
     }
     foreignObject{margin:0}
     xh|p{margin-top:0; padding-top:0; vertical-align:top}
+    xh|th,xh|td{margin:0; padding: 0 4pt 4pt 0; vertical-align: top;
+    text-align: left}
     .txt_subtitle{
       font-family:Archivo, 'SF Pro', Verdana, sans-serif; 
       font-size:32pt; font-weight:700; text-anchor:middle;
@@ -42,7 +44,7 @@
         font-family:Cambria, Georgia, 'Times New Roman', Times, serif; 
         font-size:54pt; font-weight:700; text-anchor:middle;
     }
-    .caption{font-weight:700}
+    .caption,xh|th{font-weight:700}
     .uri_info{font-weight:700; font-size:12pt}
     .email_info{font-style:italic; font-size:12pt}
     .pane_pink_rounded{fill:#e2d5e7; fill-opacity:1; stroke:#262327; stroke-dasharray:none; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-opacity:1; stroke-width:1}
@@ -52,12 +54,6 @@
   </style>
   <linearGradient xlink:href="#linearGradient52678" id="linearGradient52680" 
     x1="0" y1="1000.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse" />
-  <clipPath id="clipText250x24" clipPathUnits="objectBoundingBox">
-    <rect x="0" y="0" width="250" height="24"/></clipPath>
-  <clipPath id="clipText380x12" clipPathUnits="objectBoundingBox">
-    <rect x="0" y="0" width="380" height="12"/></clipPath>
-  <clipPath id="clipText380x24" clipPathUnits="objectBoundingBox">
-    <rect x="0" y="0" width="380" height="24"/></clipPath>
 </defs>
 <g id="background-layer" style="display:block">
   <rect style="fill:url(#linearGradient52680); fill-opacity:1; stroke:none" id="rectangle-with-bg-gradient-white-to-purple" width="850" height="1100" x="0" y="0"><title>Background gradient,white to purple</title></rect>
@@ -72,48 +68,30 @@
   <image href="${image_path_2}" width="270" height="360" id="image-portrait-2" x="545.5" y="710.5" class="image_portrait"><title>Portrait 2</title></image>
   <image href="${image_path_1}" width="270" height="360" id="image-portrait-1" style="image-rendering:optimizeQuality" x="34.5" y="178.5" class="image_portrait"><title>Portrait 1</title></image>
 </g>
-<g id="text-layer" style="display:inline">
+<g id="text-layer" style="display:block">
   <text class="txt_title" x="50%" y="74.5" width="770" height="100" id="text-name-caption">MISSING PERSON</text>
   <text x="50%" y="145.5" width="770" id="text-name-value" class="txt txt_subtitle">$name</text>
-  <text x="320" y="200" width="250" id="text-age-caption"
-  class="caption">Born in:</text>
-  <text x="600" y="200" width="100" id="text-race-caption" class="caption">Race:</text>
-  <text x="320" y="320" width="100" id="text-height-caption" class="caption">Height:</text>
-  <text x="680" y="320" width="250" id="text-weight-value">$weight</text>
-  <text x="320" y="350" width="100" id="text-eyes-caption" class="caption">Eyes:</text>
-  <text x="600" y="350" width="100" id="text-hair-caption" class="caption">Hair:</text>
+  <foreignObject x="320" y="172.5" width="500" height="360"><xh:table>
+  <xh:col width="20%"/><xh:col width="40%"/><xh:col
+  width="20%"/><xh:col width="20%"/>
+  <xh:tr><xh:th>Born
+  on:</xh:th><xh:td>$born</xh:td><xh:th>Race:</xh:th><xh:td>$race</xh:td></xh:tr>
+  <xh:tr><xh:th>Pronouns:</xh:th><xh:td colspan="3">$pronouns</xh:td></xh:tr>
+  <xh:tr><xh:th>Last seen:</xh:th><xh:td colspan="3">$last_seen_on</xh:td></xh:tr>
+  <xh:tr><xh:th>Where:</xh:th><xh:td colspan="3">$last_seen_where</xh:td></xh:tr>
+  <xh:tr><xh:th>Height:</xh:th><xh:td>$height</xh:td><xh:th>Weight:</xh:th><xh:td>$weight</xh:td></xh:tr>
+  <xh:tr><xh:th>Eyes:</xh:th><xh:td>$eyes</xh:td><xh:th>Hair:</xh:th><xh:td>$hair</xh:td></xh:tr>
+  <xh:tr><xh:th>Clothing:</xh:th><xh:td colspan="3">$last_seen_wearing</xh:td></xh:tr>
+  <xh:tr><xh:th>Identifying features:</xh:th><xh:td colspan="3">$identifying_features</xh:td></xh:tr>
+  <xh:tr><xh:th>Other notes:</xh:th><xh:td colspan="3">$other_notes</xh:td></xh:tr>
+  </xh:table></foreignObject>
+
   <text x="555" y="580" width="250" id="text-contact-caption" class="caption">If seen/located, contact:</text>
-  <foreignObject x="555" y="580.5" width="250" height="100" 
+  <foreignObject x="555" y="588" width="250" height="100" 
   id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
   <text x="138.5" y="589.5" width="250" id="text-disappearance-caption" class="caption">Circumstances of disappearance:</text>
   <foreignObject x="42.5" y="600" width="480" height="300" 
   id="text-disappearance-value"><xh:p>${disappearance_circumstances}</xh:p></foreignObject>
-  <text x="320" y="260" width="250" id="text-last-seen-date-caption" class="caption">Last seen:</text>
-  <text x="320" y="230" width="100" id="text-pronouns-caption" class="caption">Pronouns:</text>
-  <text x="320" y="290" width="100" id="text-last-seen-location-caption" class="caption">Where:</text>
-  <text x="430" y="200" width="250" id="text-age-value">$born</text>
-  <text x="680" y="200" width="250" id="text-race-value">$race</text>
-  <text x="430" y="320" width="250" id="text-height-value">$height</text>
-  <text x="600" y="320" width="250" id="text-weight-caption" class="caption">Weight:</text>
-  <text x="430" y="350" width="250" id="text-eyes-value">$eyes</text>
-  <text x="680" y="350" width="250" id="text-hair-value">$hair</text>
-  <text x="430" y="260" width="250" id="text-last-seen-date-value">$last_seen_on</text>
-  <text x="430" y="230" width="250" id="text-pronouns-value">$pronouns</text>
-  <text x="430" y="290" width="250" id="text-last-seen-location-value">$last_seen_where</text>
-  <text x="320" y="380" width="250" id="text-last-seen-wearing-caption" class="caption">Clothing:</text>
-  <text x="430" y="380" width="380" height="12" clip-path="url(#clipText380x12)" id="text-last-seen-wearing-value">$last_seen_wearing</text>
-  <text x="320" y="410" width="100" id="text-identifying-features-caption" class="caption">
-  <tspan x="320" y="410">Identifying</tspan>
-  <tspan x="320" y="435">features:</tspan></text>
-  <text x="320" y="470" width="100" id="text-other-notes-caption" class="caption">
-  <tspan x="320" y="470">Other</tspan>
-  <tspan x="320" y="495">notes:</tspan></text>
-  <foreignObject x="430" y="410" width="380" height="24"
-  clip-path="url(#clipText380x24)"
-  id="text-identifying-features-value"><xh:p>$identifying_features</xh:p></foreignObject>
-  <foreignObject x="430" y="470" width="380" height="24"
-  clip-path="url(#clipText380x24)"
-  id="text-other-notes-value"><xh:p>$other_notes</xh:p></foreignObject>
   <image x="50.5" y="940.5" width="50" height="122" href="../templates/lammp-only-lantern.svg.2023_01_19_20_22.svg"/>
   <text xml:space="preserve" x="120" y="960" id="text-info-uri" class="uri_info">
   <tspan x="120" y="960">For More Information:</tspan>
@@ -127,13 +105,13 @@
   <rdf:RDF>
   <cc:Work rdf:about="">
   <dc:title>Lammpster template for Instagram</dc:title>
-  <dc:date>January 16,2023</dc:date>
+  <dc:date>January 16, 2023</dc:date>
   <dc:creator>
   <cc:Agent>
   <dc:title>A.E.Veltstra</dc:title></cc:Agent></dc:creator>
   <dc:publisher>
   <cc:Agent>
-  <dc:title>OmegaJunior Consultancy</dc:title></cc:Agent></dc:publisher>
+  <dc:title>OmegaJunior Consultancy, LLC</dc:title></cc:Agent></dc:publisher>
   <dc:language>English</dc:language>
   <dc:contributor>
   <cc:Agent>
