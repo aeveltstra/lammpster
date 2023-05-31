@@ -4,7 +4,7 @@
 #
 # Copyright OmegaJunior Consultancy
 # Since 2021-10-11
-# Version 2.23.420.2300
+# Version 2.23.530.2325
 #
 """
 
@@ -62,7 +62,7 @@ def try_cache_profile(config, profile) -> bool:
             'w',
             encoding="utf-8"
         ) as w:
-        w.write(json.dumps(profile))
+        w.write(json.dumps(profile, sort_keys=True, indent=2))
     return True
 
 

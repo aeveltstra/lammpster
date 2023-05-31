@@ -76,11 +76,11 @@
   width="20%"/><xh:col width="20%"/>
   <xh:tr><xh:th>Born
   on:</xh:th><xh:td>$born</xh:td><xh:th>Race:</xh:th><xh:td>$race</xh:td></xh:tr>
-  <xh:tr><xh:th>Pronouns:</xh:th><xh:td colspan="3">$pronouns</xh:td></xh:tr>
+  <xh:tr><xh:th>Pronouns:</xh:th><xh:td>$pronouns</xh:td><xh:th>Height:</xh:th><xh:td>$height</xh:td></xh:tr>
+  <xh:tr><xh:th>Eyes:</xh:th><xh:td>$eyes</xh:td><xh:th>Weight:</xh:th><xh:td>$weight</xh:td></xh:tr>
+  <xh:tr><xh:th>Hair:</xh:th><xh:td colspan="3">$hair</xh:td></xh:tr>
   <xh:tr><xh:th>Last seen:</xh:th><xh:td colspan="3">$last_seen_on</xh:td></xh:tr>
   <xh:tr><xh:th>Where:</xh:th><xh:td colspan="3">$last_seen_where</xh:td></xh:tr>
-  <xh:tr><xh:th>Height:</xh:th><xh:td>$height</xh:td><xh:th>Weight:</xh:th><xh:td>$weight</xh:td></xh:tr>
-  <xh:tr><xh:th>Eyes:</xh:th><xh:td>$eyes</xh:td><xh:th>Hair:</xh:th><xh:td>$hair</xh:td></xh:tr>
   <xh:tr><xh:th>Clothing:</xh:th><xh:td colspan="3">$last_seen_wearing</xh:td></xh:tr>
   <xh:tr><xh:th>Identifying features:</xh:th><xh:td colspan="3">$identifying_features</xh:td></xh:tr>
   <xh:tr><xh:th>Other notes:</xh:th><xh:td colspan="3">$other_notes</xh:td></xh:tr>
