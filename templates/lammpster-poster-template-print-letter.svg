@@ -17,30 +17,25 @@
   </linearGradient>
   <style>
     @namespace xh url("http://www.w3.org/1999/xhtml");
-    @import url("https://fonts.googleapis.com/css?family=Archivo:400");
+    @import url("https://fonts.googleapis.com/css?family=Archivo:300");
     @import url("https://fonts.googleapis.com/css?family=Archivo:700");
     svg{
-      stroke:#000; stroke-linecap:round; stroke-linejoin:round; 
+      stroke-linecap:round; stroke-linejoin:round; 
       stroke-width:1; background-color:white; width:8.5in; height:11in
     }
-    text{
-      color:#000000; fill:#000000; 
-      font-variant-numeric:normal; paint-order:stroke; text-anchor:start;
-      font-family:Archivo, 'SF Pro', Verdana, sans-serif; font-size:13pt;
-      font-style:normal; font-weight:400; stroke-width:1;
+    text,xh|div,xh|p,xh|th,xh|td{
+      color:#000000; fill:#000000; font-stretch:normal;
+      font-variant:normal; font-variant-caps:normal;
+      font-variant-ligatures:normal; font-variant-numeric:normal; 
+      paint-order:stroke; text-anchor:start;
+      font-family:Archivo, 'SF Pro', Verdana, sans-serif; font-size:11pt;
+      font-style:normal; font-weight:300;
       text-overflow:ellipsis; overflow:hidden;
-    }
-    xh|div,xh|p{
-      color:#000000; 
-      font-family:Archivo, 'SF Pro', Verdana, sans-serif;
-      font-size:13pt;
-      font-style:normal;
-      font-weight:400;
-      text-overflow:ellipsis;
-      overflow:hidden;
     }
     foreignObject{padding:0}
     xh|p{margin-top:0; padding-top:0; vertical-align:top}
+    xh|th,xh|td{margin:0; padding: 0 4pt 4pt 0; vertical-align:top;
+    text-align: left}
     .txt_subtitle{
       font-family:Archivo, 'SF Pro', Verdana, sans-serif; 
       font-size:32pt; font-weight:700; text-anchor:middle;
@@ -51,7 +46,7 @@
     }
     .uri_info{font-weight:700; font-size:12pt}
     .email_info{font-size:12pt; font-style:italic}
-    .caption{font-weight:700}
+    .caption,xh|th{font-weight:700; text-align:left; vertical-align:top}
     .pane_pink_rounded{
       fill:#e2d5e7; fill-opacity:1; stroke:#262327; 
       stroke-dasharray:none; 
@@ -64,88 +59,76 @@
   </style>
   <linearGradient xlink:href="#linearGradient52678" id="linearGradient52680"
     x1="47.5" x2="47.5" y1="1060" y2="47.5" gradientUnits="userSpaceOnUse" />
-  <clipPath id="clipTextClothing" clipPathUnits="userSpaceOnUse">
-    <rect x="428.5" y="417.5" width="300" height="24"/></clipPath>
-  <clipPath id="clipTextFeatures" clipPathUnits="userSpaceOnUse">
-    <rect x="428.5" y="443.5" width="300" height="24"/></clipPath>
-  <clipPath id="clipTextNotes" clipPathUnits="userSpaceOnUse">
-    <rect x="428.5" y="463.5" width="300" height="48"/></clipPath>
 </defs>
 
 <g id="background-layer" style="display:block">
   <rect style="fill:url(#linearGradient52680); fill-opacity:1; stroke:none;" 
   id="rectangle-with-bg-gradient-white-to-purple" width="720" height="1060"
   x="47.5" y="47.5"><title>Background gradient, white to purple</title></rect>
+</g>
+
+<g id="panes-layer" style="display:block">
   <rect style="stroke:#ffffff; " id="pane-body" width="672" height="795"
   x="72.5" y="240.5" class="pane_white_rectangle"><title>Body pane</title></rect>
   <rect id="pane-person-name" width="671" height="51" x="72.5" y="164.5" class="pane_white_rectangle pane_white_rectangle_bordered"><title>Person Name Pane</title></rect>
   <rect style="fill:#f7f7ee; fill-opacity:1; stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-dasharray:none" id="pane-title" width="671" height="71" x="72.5" y="72.5" rx="5" ry="5"><title>Title</title></rect>
-</g>
-
-<g id="body-panes-layer" style="display:block">
-  <rect id="pane-more-info" width="383" height="118" x="92.5" y="840.5" rx="15" ry="15" class="pane_pink_rounded"><title>More info pane</title></rect>
-  <rect style="display:block" id="pane-contact-if-found" width="216" height="138" x="504.5" y="529.5" rx="15" ry="15" class="pane_pink_rounded"><title>Contact if found pane</title></rect>
-  <rect id="pane-disappearance-circumstances" width="383" height="240" x="92.5" y="575.5" class="pane_white_rectangle pane_white_rectangle_bordered"><title>Disappearance circumstances pane</title></rect>
-  <image href="${image_path_2}" width="216" height="288" id="image-portrait-2" x="504.5" y="672.5" class="image_portrait"><title>Portrait 2</title></image>
+  <rect id="pane-more-info" width="383" height="118" x="92.5" y="900.5" rx="15" ry="15" class="pane_pink_rounded"><title>More info pane</title></rect>
+  <rect style="display:block" id="pane-contact-if-found" width="226"
+  height="138" x="494.5" y="585.5" rx="15" ry="15" class="pane_pink_rounded"><title>Contact if found pane</title></rect>
+  <rect id="pane-disappearance-circumstances" width="383" height="280"
+  x="92.5" y="585.5" class="pane_white_rectangle pane_white_rectangle_bordered"><title>Disappearance circumstances pane</title></rect>
+  <image href="${image_path_2}" width="216" height="288"
+  id="image-portrait-2" x="504.5" y="732.5" class="image_portrait"><title>Portrait 2</title></image>
   <image href="${image_path_1}" width="216" height="288"
-  id="image-portrait-1" style="image-rendering:optimizeQuality" x="92.5" y="264.5" class="image_portrait"><title>Portrait 1</title></image>
+  id="image-portrait-1" style="image-rendering:optimizeQuality" x="92.5"
+  y="250.5" class="image_portrait"><title>Portrait 1</title></image>
 </g>
 
 <g id="text-layer" style="display:block">
-  <text class="txt_title" x="50%" y="135.5" width="645" height="100" id="text-name-caption">MISSING PERSON</text>
-  <text x="50%" y="206.5" width="645" id="text-name-value" class="txt_subtitle">$name</text>
-  <text class="caption" x="335.5" y="277.5" width="100"
-  id="text-age-caption">Born in:</text>
-  <text class="caption" x="573.5" y="277.5" width="100" id="text-race-caption">Race:</text>
-  <text class="caption" x="335.5" y="379.5" width="100" id="text-height-caption">Height:</text>
-  <text x="640.5" y="379.5" width="250" id="text-weight-value">$weight</text>
-  <text class="caption" x="335.5" y="405.5" width="100" id="text-eyes-caption">Eyes:</text>
-  <text class="caption" x="573.5" y="405.5" width="100" id="text-hair-caption">Hair:</text>
-  <text class="caption" x="509.5" y="550.5" width="250" id="text-contact-caption">If seen/located, contact:</text>
-  <foreignObject x="509.5" y="565.5" width="205" height="105" id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
-  <text class="caption" x="157.5" y="566.5" width="100" id="text-disappearance-caption">Circumstances of disappearance:</text>
-  <foreignObject x="108.5" y="579.5" width="250" height="400"
+  <text class="txt_title" x="50%" y="130.5" width="645" height="100" id="text-name-caption">MISSING PERSON</text>
+  <text x="50%" y="203.5" width="645" id="text-name-value" class="txt_subtitle">$name</text>
+  <foreignObject x="320.5" y="250.5" width="412" height="350">
+    <xh:table>
+      <xh:col width="20%"/><xh:col width="40%"/><xh:col width="20%"/><xh:col
+      width="20%"/>
+      <xh:tr><xh:th>Born
+      in:</xh:th><xh:td>$born</xh:td><xh:th>Race:</xh:th><xh:td>$race</xh:td></xh:tr>
+  <xh:tr><xh:th>Pronouns:</xh:th><xh:td>$pronouns</xh:td><xh:th>Height:</xh:th><xh:td>$height</xh:td></xh:tr>
+  <xh:tr><xh:th>Eyes:</xh:th><xh:td>$eyes</xh:td><xh:th>Weight:</xh:th><xh:td>$weight</xh:td></xh:tr>
+  <xh:tr><xh:th>Hair:</xh:th><xh:td colspan="3">$hair</xh:td></xh:tr>
+  <xh:tr><xh:th>Last seen:</xh:th><xh:td colspan="3">$last_seen_on</xh:td></xh:tr>
+  <xh:tr><xh:th>Where:</xh:th><xh:td colspan="3">$last_seen_where</xh:td></xh:tr>
+  <xh:tr><xh:th>Clothing:</xh:th><xh:td colspan="3">$last_seen_wearing</xh:td></xh:tr>
+  <xh:tr><xh:th>Identifying features:</xh:th><xh:td colspan="3">$identifying_features</xh:td></xh:tr>
+  <xh:tr><xh:th>Other notes:</xh:th><xh:td colspan="3">$other_notes</xh:td></xh:tr>
+    </xh:table>
+  </foreignObject>
+  <text class="caption" x="504.5" y="606.5" width="206" id="text-contact-caption">If seen/located, contact:</text>
+  <foreignObject x="504.5" y="619.5" width="206" height="105" id="text-contact-value"><xh:p>$contact_if_found</xh:p></foreignObject>
+  <text class="caption" x="157.5" y="606.5" width="100" id="text-disappearance-caption">Circumstances of disappearance:</text>
+  <foreignObject x="100.5" y="619.5" width="370" height="260"
   id="text-disappearance-value"><xh:p>${disappearance_circumstances}</xh:p></foreignObject>
-  <text class="caption" x="335.5" y="328.5" width="100" id="text-last-seen-date-caption">Last seen:</text>
-  <text class="caption" x="335.5" y="303.5" width="100" id="text-pronouns-caption">Pronouns:</text>
-  <text class="caption" x="335.5" y="354.5" width="100" id="text-last-seen-location-caption">Where:</text>
-  <text x="428.5" y="277.5" width="200" id="text-age-value">$born</text>
-  <text x="640.5" y="277.5" width="200" id="text-race-value">$race</text>
-  <text x="428.5" y="379.5" width="200" id="text-height-value">$height</text>
-  <text class="caption" x="573.5" y="379.5" width="100" id="text-weight-caption">Weight:</text>
-  <text x="428.5" y="405.5" width="200" id="text-eyes-value">$eyes</text>
-  <text x="640.5" y="405.5" width="200" id="text-hair-value">$hair</text>
-  <text x="428.5" y="328.5" width="200" id="text-last-seen-date-value">$last_seen_on</text>
-  <text x="428.5" y="303.5" width="200" id="text-pronouns-value">$pronouns</text>
-  <text x="428.5" y="354.5" width="200" id="text-last-seen-location-value">$last_seen_where</text>
-  <text class="caption" x="335.5" y="430.5" width="100" id="text-last-seen-wearing-caption">Clothing:</text>
-  <text x="428.5" y="430.5" width="300" clip-path="url(#clipTextClothing)" id="text-last-seen-wearing-value">$last_seen_wearing</text>
-  <text class="caption" x="335.5" y="455.5" width="100" id="text-identifying-features-caption">Features:</text>
-  <text x="428.5" y="455.5" width="300" clip-path="url(#clipTextFeatures)" id="text-identifying-features-value">$identifying_features</text>
-  <text class="caption" x="335.5" y="480.5" width="100" id="text-other-notes-caption">Notes:</text>
-  <foreignObject x="428.5" y="463.5" width="300" height="48"
-    clip-path="url(#clipTextNotes)" id="text-other-notes-value"><xh:p>$other_notes</xh:p></foreignObject>
-  <image x="105.5" y="849.5" height="98" width="38" href="../templates/lammp-only-lantern.svg.2023_01_19_20_22.svg" />
-  <text xml:space="preserve" x="149.5" y="862.5" id="text-info-uri" class="uri_info">
-  <tspan class="caption" x="149.5" y="862.5">For More Information:</tspan>
-  <tspan x="149.5" y="882.5">Visit LAMMP.TransDoeTaskForce.org</tspan></text>
-  <text xml:space="preserve" x="149.5" y="904.5" id="text-info-email" class="email_info">
-  <tspan x="149.5" y="904.5">Do you know someone who is LGBTQ+ and </tspan>
-  <tspan x="149.5" y="924.5">missing? Let us help!</tspan>
-  <tspan x="149.5" y="944.5">Email LAMMP@transdoetaskforce.org</tspan></text>
+  <image x="105.5" y="912.5" height="98" width="38" href="../templates/lammp-only-lantern.svg.2023_01_19_20_22.svg" />
+  <text xml:space="preserve" x="149.5" y="922.5" id="text-info-uri" class="uri_info">
+  <tspan class="caption" x="149.5" y="922.5">For More Information, Visit:</tspan>
+  <tspan x="149.5" y="942.5">LAMMP.TransDoeTaskForce.org</tspan></text>
+  <text xml:space="preserve" x="149.5" y="964.5" id="text-info-email" class="email_info">
+  <tspan x="149.5" y="964.5">Do you know someone who is LGBTQ+</tspan>
+  <tspan x="149.5" y="984.5">and missing? Let us help! Email:</tspan>
+  <tspan x="149.5" y="1004.5">LAMMP@transdoetaskforce.org</tspan></text>
 </g>
 
 <metadata>
   <rdf:RDF>
   <cc:Work rdf:about="">
   <dc:title>Lammpster template for Print, Letter</dc:title>
-  <dc:date>January 16,2023</dc:date>
+  <dc:date>January 16, 2023</dc:date>
   <dc:creator>
   <cc:Agent>
   <dc:title>A.E.Veltstra</dc:title></cc:Agent></dc:creator>
   <dc:publisher>
   <cc:Agent>
-  <dc:title>OmegaJunior Consultancy</dc:title></cc:Agent></dc:publisher>
+  <dc:title>OmegaJunior Consultancy, LLC</dc:title></cc:Agent></dc:publisher>
   <dc:language>English</dc:language>
   <dc:contributor>
   <cc:Agent>
