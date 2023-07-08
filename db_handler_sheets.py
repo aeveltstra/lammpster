@@ -2,9 +2,9 @@
 # Connects to Google Sheets as a data store.
 # Used as part of Lammpster.
 #
-# Copyright OmegaJunior Consultancy
+# Copyright OmegaJunior Consultancy, LLC.
 # Since 2021-10-11
-# Version 2.23.420.2300
+# Version 2.23.607.2211
 #
 """
 
@@ -313,7 +313,7 @@ def maybe_get_configured_db(config):
     db_id = config_handler.maybe_get_config_entry(
         config,
         "sheet",
-        "google_drive_sheet_id"
+        "id"
     )
     keys_file = config_handler.maybe_get_config_entry(
         config,

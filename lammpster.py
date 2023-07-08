@@ -3,12 +3,13 @@
 # Easily publish LAMMP registrations as posters for publication
 # on social media and phystical printing.
 #
-# Copyright OmegaJunior Consultancy
+# Copyright OmegaJunior Consultancy, LLC.
 # Since 2021-10-11
-# Version 2.23.420.2300
+# Version 2.23.707.2119
 #
 """
 
+import pathlib
 import os
 import sys
 from io import BytesIO
@@ -351,6 +352,131 @@ def run_on_demand_functions(
     return ran
 
 
+def process_map(map_file: str):
+    print(f"Processing map ${map_file}...")
+    map_config = config_handler.read_config(map_file)
+    data_source_file = config_handler.maybe_get_config_entry(
+        map_config,
+        "datasource",
+        "file"
+    )
+    data_source_config = config_handler.read_config(data_source_file)
+    db_handler_name = config_handler.maybe_get_config_entry(
+        data_source_config,
+        "provider",
+        "handler",
+        "db_handler_sheets"
+    )
+    if isinstance(db_handler_name, KeyError):
+        print("Error: missing the name for its data handler.")
+        print(db_handler_name)
+        return
+
+    db_handler = __import__(db_handler_name)
+    maybe_db = db_handler.maybe_get_configured_db(data_source_config)
+    if isinstance(maybe_db, KeyError):
+        print("Error: missing setting for which data source to use.")
+        print(maybe_db)
+        return
+
+    db_store = db_handler.get_db_store(data_source_config, maybe_db)
+    if isinstance(db_store, KeyError):
+        print("Error: missing setting for which data store to read.")
+        print(db_store)
+        return
+
+    if run_on_demand_functions(map_config, maybe_db, db_store):
+        return
+
+    case_id = read_case_id_from_command_line()
+    if not case_id:
+        msg = """Error: missing case identifier.
+ Specify the identity of the case/profile to print.
+ Place it as the first argument of the application
+ run invocation, like so:
+ $ python3 ./lammpster.py abc1234
+ To find out what case identifiers exist, use the
+ command-line switch --list-column-values i,
+ in which you substitute i for the column that
+ holds the case identifiers, like so:
+ $ python3 ./lammpster.py --list-column-values 1"""
+        print(msg)
+        return
+
+    msg = (
+        "Lammpster will create posters for the profile "
+        f"identified by {case_id}..."
+    )
+    print(msg)
+
+    profile = profile_maker.try_read_cached_profile(
+        map_config,
+        case_id
+    )
+    if profile:
+        print("Found profile in cache.")
+    else:
+        print(
+            "Found no cache for this profile. Reaching out..."
+        )
+        case_row_index = db_handler.find_row_index(
+            db_store,
+            case_id
+        )
+        if not case_row_index:
+            msg = (
+                f"Error: No case found with id {case_id}. Use the "
+                "command-line switch --list-column-values to find "
+                "existing case identifiers."
+            )
+            print(msg)
+            return
+
+        print(f"Found case with id {case_id}. Creating profile...")
+        profile = profile_maker.create(
+            map_config,
+            db_store,
+            db_handler,
+            case_row_index
+        )
+    output_folder = config_handler.maybe_get_config_entry(
+        map_config,
+        "output",
+        "folder",
+        "~/"
+    )
+    output_file_prefix = config_handler.maybe_get_config_entry(
+        map_config,
+        "output",
+        "file_prefix",
+        ""
+    )
+    input_templates = config_handler.maybe_get_config_section_items(
+         map_config,
+         "input_templates",
+         {}
+    )
+    if not input_templates:
+        print(
+           "Error: missing input templates setting. Check the manual."
+        )
+        return
+
+    print("Generating and saving posters....")
+    for channel, template in input_templates.items():
+        create_poster(
+            map_config,
+            profile,
+            channel,
+            template,
+            output_folder,
+            output_file_prefix
+        )
+
+    print(f"Done. Check the folder '{output_folder}' for new posters.")
+    return None
+
+
 def main() -> None:
     """
     Main entry point of the program. Checks the environment, reads
@@ -362,110 +488,32 @@ def main() -> None:
     are available.
     """
 
-    if not os.path.exists("./.config"):
+    if not os.path.exists("./config.ini"):
         msg = (
-            "Expected configuration file '.config' was not found. "
+            "Expected configuration file 'config.ini' was not found. "
             "Please consult the documentation."
         )
         sys.exit(msg)
     else:
         print("Retrieving configuration...")
 
-    config = config_handler.read_config()
-    maybe_db = db_handler_sheets.maybe_get_configured_db(config)
-    if isinstance(maybe_db, KeyError):
-        sys.exit(maybe_db)
+    config = config_handler.read_config("./config.ini")
+    maps_folder = config_handler.maybe_get_config_entry(
+        config, "maps", "folder", "./maps"
+    )
+    if isinstance(maps_folder, KeyError):
+        sys.exit(maps_folder)
+    
+    map_list = [
+        item 
+        for item in pathlib.Path(maps_folder).rglob("*.map")
+        if item.is_file()
+    ]
+    if not map_list:
+        sys.exit("No maps found in map folder. Looked for files with extension .map, but couldn't find any.")
 
-    db_store = db_handler_sheets.get_db_store(config, maybe_db)
-    if isinstance(db_store, KeyError):
-        sys.exit(db_store)
-
-    if run_on_demand_functions(config, maybe_db, db_store):
-        sys.exit()
-
-    case_id = read_case_id_from_command_line()
-    if not case_id:
-        msg = """Error: missing case identifier.
-  Specify the identity of the case/profile to print.
-  Place it as the first argument of the application
-  run invocation, like so:
-  $ python3 ./lammpster.py abc1234
-  To find out what case identifiers exist, use the
-  command-line switch --list-column-values i,
-  in which you substitute i for the column that
-  holds the case identifiers, like so:
-  $ python3 ./lammpster.py --list-column-values 1"""
-        sys.exit(msg)
-    else:
-        msg = (
-            "Lammpster will create posters for the profile identified "
-            f"by {case_id}..."
-        )
-        print(msg)
-
-        profile = profile_maker.try_read_cached_profile(
-            config,
-            case_id
-        )
-        if profile:
-            print("Found profile in cache.")
-        else:
-            print("Found no cache for this profile. Reaching out...")
-            case_row_index = db_handler_sheets.find_row_index(
-                db_store,
-                case_id
-            )
-            if not case_row_index:
-                msg = (
-                    f"Error: No case found with id {case_id}. Use the "
-                    "command-line switch --list-column-values to find "
-                    "existing case identifiers."
-                )
-                sys.exit(msg)
-
-            print(f"Found case with id {case_id}. Creating profile...")
-            profile = profile_maker.create(
-                config,
-                db_store,
-                case_row_index
-            )
-
-        output_folder = config_handler.maybe_get_config_entry(
-            config,
-            "output",
-            "folder",
-            "~/"
-        )
-        output_file_prefix = config_handler.maybe_get_config_entry(
-            config,
-            "output",
-            "file_prefix",
-            ""
-        )
-
-        poster_choices = config_handler.maybe_get_config_section_items(
-             config,
-             "posters",
-             {}
-        )
-        if not poster_choices:
-            raise Exception(
-               "Error: missing posters configuration. Check the manual."
-            )
-
-        print("Generating and saving posters....")
-        for channel, template in poster_choices.items():
-            create_poster(
-                config,
-                profile,
-                channel,
-                template,
-                output_folder,
-                output_file_prefix
-            )
-
-        print(f"Done. Check the folder '{output_folder}' for new posters.")
-        return None
+    for map_file in map_list:
+        process_map(map_file)
 
 
 # Normally, python will execute any script statements not

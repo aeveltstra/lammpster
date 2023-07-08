@@ -12,47 +12,14 @@
 ; examples. Disable a setting by placing a ; in front of its line.
 
 ; --------------------------------------------------------------------
-; Tell Lammpster which spreadsheet and page inside of it to read.
-[sheet]
-; Provide the Google identifier of the spread sheet.
-; The owner will need to share that spread sheet with the service 
-; account identified below, in the account section. Have them use the 
-; Share button above the spread sheet, and have them supply the email 
-; address of the service acccount (specified in the account section, 
-; below).  
-google_drive_sheet_id = 1opYcLDkQC13Mvzu4YPqG2ZcH3hYUqcf4XWQWe0em2ac
-; Provide the name of the page inside the spread sheet.
-page_name = Missing
-; Provide the number of the row that contains the column names.
-; Numbering starts at 1. Usually it is row 1.
-; This is used for instance when listing the sheet column names 
-; separately, using the command-line option --list-column-names. 
-page_column_names_row = 1
-
-; --------------------------------------------------------------------
-; Tell Lammpster which Google Service Account to use. 
-; To set up the account, read this:
-; https://developers.google.com/workspace/guides/create-credentials
-; Review the Google Service Accounts in your Google Workspace Project 
-; here:
-; https://console.cloud.google.com/iam-admin/serviceaccounts
-; Enter the Manage Keys screen.
-; Copy the JSON-formatted access key for the account from:
-; Keys > Add key > Create new key.
-; Select JSON, then click Create. The new file will be downloaded to
-; your computer. Keep the key file outside of the project and do not 
-; upload it to any publicly accessible code source vault.
-; You will need to enable the Workspace Project for API Access. Give 
-; the email address of this service account to the owner of the Google 
-; Spread Sheet specified in the sheet section, above. They will need 
-; to share their spread sheet with this service account. 
-[account]
-keys_file = ../keys/lammpster-api-key-3f2e26c9092b.json
+; Tell Lammpster what data store to use
+[datasource]
+file = ./datasources/mock.sheets.ini
 
 ; --------------------------------------------------------------------
 ; Tell Lammpster which templates to use for posters.
 ; For each, it will generate posters in the formats pdf, png, and svg.
-[posters]
+[input_templates]
 ; facebook = ./templates/lammpster-poster-template-fb-1200x630.svg
 ; twitter_header = ./templates/lammpster-poster-template-twitter-header-1500x500.svg
 ; twitter_post = ./templates/lammpster-poster-template-twitter-post-1200x675.svg
@@ -93,6 +60,7 @@ cache = ./cached_profiles
 ; Mapping format: placeholder = field name
 ; Mapping example: born = Birth Year
 [profile_map]
+;mapping MUST include a case_id entry.
 case_id = Case ID
 name = Chosen Name
 born = Birth Year

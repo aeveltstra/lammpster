@@ -1,8 +1,8 @@
 """
 # Unit tester for LAMMPster.
-# Copyright OmegaJunior Consultancy
+# Copyright OmegaJunior Consultancy, LLC.
 # Since 2021-10-11
-# Version 2.23.420.2300
+# Version 2.23.607.2150
 #
 """
 
@@ -143,5 +143,5 @@ def test(config):
 
 if __name__ == "__main__":
     print("Running unit tests. Please stand by...")
-    config = config_handler.read_config()
+    config = config_handler.read_config("./config.ini")
     test(config)

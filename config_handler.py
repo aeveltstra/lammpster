@@ -1,7 +1,7 @@
 """
 # Reads a configuration file, returns parts of it.
 #
-# Copyright OmegaJunior Consultancy
+# Copyright OmegaJunior Consultancy, LLC.
 # Since 2021-10-11
 # Version 2.23.420.2300
 #
@@ -11,10 +11,17 @@ from configparser import ConfigParser, NoOptionError
 from typing import Union, Optional
 
 
-def read_config() -> ConfigParser:
+def read_config(file_path: str) -> ConfigParser:
     """
     Creates a ConfigParser instance and reads the configuration file
-    named '.config' into it. See the README.md for its expected contents.
+    into it. See the README.md for its expected contents.
+
+    Parameters
+    ----------
+    - file_path: str, required
+        Should provide the location (folder and file name) where
+        the configuration file can be found. The location may be
+        relative to the application.
 
     Returns
     -------
@@ -22,11 +29,11 @@ def read_config() -> ConfigParser:
 
     Exceptions
     ----------
-    IOException in case no file was found by the name '.config'.
+    IOException in case no file was found at the passed-in file path.
     """
 
     config = ConfigParser()
-    config.read("./.config")
+    config.read(file_path)
     return config
 
 

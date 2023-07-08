@@ -2,9 +2,9 @@
 # Extracts a profile for a specific person from the
 # specified data store. Used as part of Lammpster.
 #
-# Copyright OmegaJunior Consultancy
+# Copyright OmegaJunior Consultancy, LLC.
 # Since 2021-10-11
-# Version 2.23.530.2325
+# Version 2.23.607.2238
 #
 """
 
@@ -15,7 +15,6 @@ import re
 from functools import partial
 from string import Template
 from typing import Any, Union
-import db_handler_sheets
 import config_handler
 
 
@@ -100,6 +99,7 @@ def try_read_cached_profile(
 def create(
     config,
     store,
+    db_handler,
     case_row_index: int
 ) -> Union[dict[str, Any], None]:
     """
@@ -113,7 +113,9 @@ def create(
     - config: ConfigParser, required
         Should have the configuration file preloaded.
     - store: that which holds the profile records, required
-    - case_row_id: int, required
+    - db_handler: the module that handles access to the data store,
+      required.
+    - case_row_index: int, required
         Should be the number of that record in the store,
         that identifies of which to create a profile.
         You can find this from db_handler_sheets.find_row_index().
@@ -128,7 +130,7 @@ def create(
     if not store or not case_row_index:
         return None
     get_stores_for_config = partial(
-        db_handler_sheets.get_value_for_field_by_name,
+        db_handler.get_value_for_field_by_name,
         config
     )
     get_rows_for_store = partial(get_stores_for_config, store)
