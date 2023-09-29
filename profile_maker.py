@@ -104,9 +104,9 @@ def create(
 ) -> Union[dict[str, Any], None]:
     """
     Takes the cell values from a row, and turns them into a profile
-    for injecting into a poster. The input fields from the store and
-    the output fields for the profile are read from the config.
-    If possible, this method also attempts to cache the profile.
+    for injecting into an output template. The input fields from the 
+    store and the output fields for the profile are read from the 
+    config. If possible, this method also attempts to cache the profile.
 
     Parameters
     ----------
