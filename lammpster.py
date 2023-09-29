@@ -404,7 +404,7 @@ def process_map(map_file: str):
         return
 
     msg = (
-        "Lammpster will create posters for the profile "
+        "Lammpster will create output for the profile "
         f"identified by {case_id}..."
     )
     print(msg)
