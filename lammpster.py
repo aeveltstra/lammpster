@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
+# A configurable ETL mapper. Initial purpose: 
 # Easily publish LAMMP registrations as posters for publication
 # on social media and phystical printing.
 #
 # Copyright OmegaJunior Consultancy, LLC.
 # Since 2021-10-11
-# Version 2.23.707.2119
+# Version 2.23.929.1514
 #
 """
 
