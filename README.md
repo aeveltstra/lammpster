@@ -57,7 +57,7 @@ the source files is but an example. You need to adjust it to
 fit your needs. That file is called:
 /maps/lammp.map
 which points to a data source configuration here:
-...
+/datasources/mock.sheets.ini
 which knows how to connect to Google Sheets.
   
 First and foremost, understand that this software expects 
