@@ -55,7 +55,7 @@ the record in your LAMMP database.
 It is likely to fail because the configuration available in
 the source files is but an example. You need to adjust it to
 fit your needs. That file is called:
-.config  
+/maps/lammpster.ini
   
 First and foremost, understand that this software expects 
 that the database is a Google Spread Sheet. The owner of 
