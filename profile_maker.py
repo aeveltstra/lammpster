@@ -1,10 +1,10 @@
 """
-# Extracts a profile for a specific person from the
+# Extracts a profile for a specific record from the
 # specified data store. Used as part of Lammpster.
 #
 # Copyright OmegaJunior Consultancy, LLC.
 # Since 2021-10-11
-# Version 2.23.607.2238
+# Version 2.23.929.1504
 #
 """
 
