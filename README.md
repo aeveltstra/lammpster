@@ -55,7 +55,10 @@ the record in your LAMMP database.
 It is likely to fail because the configuration available in
 the source files is but an example. You need to adjust it to
 fit your needs. That file is called:
-/maps/lammpster.ini
+/maps/lammp.map
+which points to a data source configuration here:
+...
+which knows how to connect to Google Sheets.
   
 First and foremost, understand that this software expects 
 that the database is a Google Spread Sheet. The owner of 
