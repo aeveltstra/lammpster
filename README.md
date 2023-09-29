@@ -2,7 +2,7 @@ To create posters from data stored in the LAMMP database.
 
 Copyright: OmegaJunior Consultancy
 Since: 2021-10-11.
-Version: 2023-05-30
+Version: 2023-09-29
 
 The LAMMP database stores and publishes information about
 missing and murdered people who are part of marginalized 
@@ -54,10 +54,12 @@ the record in your LAMMP database.
   
 It is likely to fail because the configuration available in
 the source files is but an example. You need to adjust it to
-fit your needs. That file is called:
-/maps/lammp.map
-which points to a data source configuration here:
-/datasources/mock.sheets.ini
+fit your needs. That file is called:  
+/maps/lammp.map  
+
+which points to a data source configuration here:  
+/datasources/mock.sheets.ini  
+
 which knows how to connect to Google Sheets.
   
 First and foremost, understand that this software expects 
@@ -115,13 +117,13 @@ Additional options:
   or options, like so: 
   $ python3 -m lammpster --list-column-names  
 
-- --list-sheet-pages will list the page names in the spread 
+- --list-data-stores will list the page names in the spread 
   sheet. Use this to explore a spread sheet of which the 
   owner forgot to specify which page to query. By default, 
   the page of interest is named sheet1, but owners have the 
   option of renaming sheets. Invoke this without providing 
   other switches or options, like so: 
-  $ python3 -m lammpster --list-sheet-pages  
+  $ python3 -m lammpster --list-data-stores  
 
 - --list-column-values x will list all values in column x in
   the specified page in the spread sheet. Use this to find a
