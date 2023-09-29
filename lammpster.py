@@ -19,7 +19,6 @@ from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import config_handler
-import db_handler_sheets
 import profile_maker
 import unit_tester
 
@@ -36,7 +35,7 @@ def read_case_id_from_command_line() -> Union[str, None]:
     return None
 
 
-def must_list_sheet_column_names() -> bool:
+def must_list_data_store_column_names() -> bool:
     """
     Returns true, if the command-line argument --list-column-names
     was added to the run invocation.
@@ -45,13 +44,13 @@ def must_list_sheet_column_names() -> bool:
     return "--list-column-names" in sys.argv
 
 
-def must_list_sheet_page_names() -> bool:
+def must_list_data_store_names() -> bool:
     """
-    Returns true, if the command-line argument --list-sheet-pages
+    Returns true, if the command-line argument --list-data-stores
     was added to the run invocation.
     """
 
-    return "--list-sheet-pages" in sys.argv
+    return "--list-data-stores" in sys.argv
 
 
 def must_list_column_values() -> bool:
@@ -287,6 +286,7 @@ def create_poster(
 
 def run_on_demand_functions(
     config,
+    db_hander,
     db,
     store
 ) -> bool:
@@ -302,19 +302,19 @@ def run_on_demand_functions(
 
     ran = False
 
-    if must_list_sheet_page_names():
-        print("All page names in the spread sheet:")
-        print(db_handler_sheets.get_store_names(db))
+    if must_list_data_store_names():
+        print("All data store names in the data base:")
+        print(db_handler.get_store_names(db))
         ran = True
 
-    if must_list_sheet_column_names():
-        print("All column names in page:")
+    if must_list_data_store_column_names():
+        print("All column names in data store:")
         page_column_names_row = config_handler.maybe_get_config_entry(
             config,
             "sheet",
             "page_column_names_row", "0"
         )
-        columns = db_handler_sheets.get_column_names(
+        columns = db_handler.get_column_names(
             store,
             int(page_column_names_row)
         )
@@ -338,10 +338,10 @@ def run_on_demand_functions(
 
         msg = (
             "All column values in column "
-            f"{str(column_index)} of page:"
+            f"{str(column_index)} of table:"
         )
         print(msg)
-        cells = db_handler_sheets.get_column_values(store, column_index)
+        cells = db_handler.get_column_values(store, column_index)
         print(cells)
         ran = True
 
@@ -386,7 +386,7 @@ def process_map(map_file: str):
         print(db_store)
         return
 
-    if run_on_demand_functions(map_config, maybe_db, db_store):
+    if run_on_demand_functions(map_config, db_handler, maybe_db, db_store):
         return
 
     case_id = read_case_id_from_command_line()
